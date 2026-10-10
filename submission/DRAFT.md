@@ -8,11 +8,11 @@ Postmark — a world worth guessing.
 
 Postmark turns a geography duel into a travel ritual. Invite a friend, read the same clues, and place your pins. Both guesses reveal together. After three rounds, open a passport filled with souvenir country stamps.
 
-It combines the Geo Duels and World Passport requests from MagicBlock's idea list. The design uses a travel-journal palette, a projected world map, boarding-pass invitations, and collectible stamps, with a phone-friendly interface.
+It combines the Geo Duels and World Passport requests from MagicBlock's idea list. The design uses a travel-journal palette, an interactive 3D globe, boarding-pass invitations, and collectible stamps, with a phone-friendly interface.
 
 ## Technical claims permitted now
 
-The local multiplayer game is working. The Anchor program compiles and passes local-validator permission and round-transition tests. A MagicBlock delegation and commit adapter is implemented but has not passed live devnet verification.
+The Vercel-hosted multiplayer game is working, with PostgreSQL persistence and an interactive first-play tutorial. The Anchor program compiles and passes local-validator permission and round-transition tests. A MagicBlock delegation and commit adapter is implemented but has not passed live devnet verification.
 
 ## Technical claims requiring live evidence
 
@@ -31,4 +31,6 @@ Do not claim deployed MagicBlock gameplay or attach an invented explorer link. A
 
 Public repository: https://github.com/ronkenx9/postmark
 
-Public website, demo video and real integration explorer proof remain pending. Event availability must first be confirmed; current public portal reports no open events.
+Public website: https://postmark-teal.vercel.app
+
+Demo video and real integration explorer proof remain pending. Event availability must first be confirmed; current public portal reports no open events.

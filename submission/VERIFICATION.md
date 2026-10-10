@@ -15,7 +15,7 @@
 ## Not yet confirmed
 
 - Public devnet deployment, delegation, ER transactions, final base-layer commitment.
-- Public hosting/repository and final demo video.
+- Final demo video.
 - Open MagicBlock event: current browser-rendered portal says none, conflicting with saved registration notes.
 
 ## Four-pass review findings
@@ -31,3 +31,14 @@
 - Browser room 59AC6E: invite button reports copied; a separate localhost identity opens the invitation with code prefilled, joins as River, and places a pin by clicking the map. Reopening the invitation retains the returning identity.
 - Room joins reset the previous pin; existing sessions are fetched before creating a new identity, including during initial profile loading.
 - Latest free devnet wallet balance check remains zero. No deployment or live-chain evidence is claimed.
+
+## Vercel and tutorial verification — October 10
+
+- Public site: https://postmark-teal.vercel.app. Dedicated free Neon PostgreSQL storage, transactional writes, Vercel frontend and API.
+- The public API completed the full three-round two-player lifecycle and rejected invalid/unauthorized/replayed guesses (POSTMARK_API_PASS).
+- Two independent local server processes using PostgreSQL, and then the public Vercel API, passed simultaneous guesses/round advances with both players retaining all three stamps (POSTMARK_CONCURRENCY_PASS).
+- First-run tutorial, practice pin/reveal, completion, manual reopening, Escape dismissal and suppression on reload were verified in the local browser. Public mobile tutorial renders without horizontal overflow at 390px.
+- Fixed Vercel startup failure by loading chain dependencies only when devnet is explicitly enabled. Fixed API rewrites by explicitly forwarding the route to the function.
+- Live chain verification is still pending. PostgreSQL uses one locked JSONB state row for this small demo; it needs normalized per-match rows for larger traffic.
+- Public practice completed three rounds at 14,992 vs 7,655 and awarded three labelled stamps. Reload exposed an identity/match request ordering race; identity restoration now precedes match restoration.
+- After the loading fix, the public browser restored finished match 1E6442 after reload and showed all three stamps. Public tutorial practice pin/reveal also passed; screenshot tutorial.jpg.

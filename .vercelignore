@@ -1,0 +1,12 @@
+.git
+.tools
+keys
+.data
+target
+.env*
+submission
+research
+node_modules
+dist
+.agents
+skills-lock.json

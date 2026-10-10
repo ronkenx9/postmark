@@ -30,9 +30,9 @@ npm run test:api
 - Playable responsive lobby, multiplayer rooms, three rounds, geography map, results, practice and passport.
 - Nine curated locations; distances use the Haversine formula and points use `round(5000 * exp(-distanceKm / 2000))`.
 - Guesses stay server-side until both players submit. The location list is public source: this is a casual clue game, not cheat-resistant competitive play.
-- Server persists rooms and passport state through atomic local file replacement. Deploy a single instance with a persistent volume. Do not use ephemeral multi-instance hosting with this storage adapter.
+- With `DATABASE_URL`, the API stores profiles, rooms and passports in PostgreSQL. Write transactions lock the state row so concurrent guesses cannot overwrite each other. Without a database, local development uses atomic file replacement and requires a single server with a persistent volume.
 - Anchor program compiles and passed local-validator checks. It implements signer authorization, round sequencing, salted/HMAC guess commitments, bounded oracle scores, delegation, and final commit/undelegation.
-- The server contains a MagicBlock adapter. Live devnet deployment and ER-to-Solana proof are **not yet verified**. Local play is labelled accordingly.
+- The server contains a MagicBlock adapter. Live devnet deployment and ER-to-Solana proof are **not yet verified**. The hosted game labels its chain integration as pending.
 
 ## MagicBlock flow
 
@@ -58,7 +58,7 @@ For devnet, fund only the dedicated test wallet with free test SOL, deploy `targ
 
 - Devnet faucet rejected two requests on October 10; no test funds or live program deployment confirmed.
 - MagicBlock's live portal said “No open events to submit to right now” on October 10. Saved registration notes say Blitz v9 closes October 12; organizer confirmation is required before claiming submission eligibility.
-- Public source is available at [ronkenx9/postmark](https://github.com/ronkenx9/postmark); GitHub's application build and gameplay checks passed. Public hosting, final video and submission remain outstanding.
+- Public source is available at [ronkenx9/postmark](https://github.com/ronkenx9/postmark); GitHub's application build and gameplay checks passed. The public game is hosted at [postmark-teal.vercel.app](https://postmark-teal.vercel.app). Final video and submission remain outstanding.
 - No match expiry/forfeit yet. A disconnected friend can rejoin with their original browser session; losing that session abandons the match.
 - Session tokens are browser-local bearer credentials; protect the host with HTTPS. No cross-device account recovery is implemented.
 - Runtime dependency audit reports two low and five moderate findings through the official MagicBlock and Solana dependency trees. No high or critical findings. Do not perform a blind major-version upgrade; recheck compatibility and the relevant call paths before public release.
@@ -77,3 +77,20 @@ The backend serves the built frontend and API from one port. `npm run build` fol
 ## Interactive globe
 
 The landing and match screens now render a Three.js sphere with locally generated Natural Earth geography. Drag to rotate, wheel/pinch or use buttons to zoom, and click/tap to place a pin. Drag gestures do not place guesses. Locked rounds disable placement; reveal shows both pins and curved paths to the destination. Coordinate fields remain available for keyboard use and devices without WebGL. Rendering is on demand, with no perpetual idle animation. Desktop mouse input and 390px layout were verified; physical multi-touch testing remains outstanding.
+
+## Vercel hosting
+
+`vercel.json` deploys the Vite frontend and the API together. Connect a dedicated PostgreSQL database and set `DATABASE_URL` in Vercel production. No wallet secrets are needed for casual play. The API creates its own state table on first use; never expose the connection string through a Vite-prefixed variable.
+
+The database adapter keeps the demo state in one JSONB row, with transactional locking. This is appropriate for a small hackathon demo, not high-volume production: split profiles and matches into separate rows before scaling. Chain-enabled serverless hosting is deliberately blocked until durable transaction recovery is verified; the local chain adapter remains available for devnet qualification.
+
+To verify a deployment:
+
+```sh
+POSTMARK_URL=https://your-site.vercel.app npm run test:api
+POSTMARK_URL=https://your-site.vercel.app POSTMARK_SECOND_URL=https://your-site.vercel.app node scripts/verify-concurrency.mjs
+```
+
+## Tutorial
+
+First-time visitors see a four-step interactive tutorial: rotate and zoom, place and lock a practice pin, inspect the reveal, then learn scoring and passport rewards. It can be skipped or closed with Escape and reopened using **How to play**. Tutorial actions do not create a match or award stamps.

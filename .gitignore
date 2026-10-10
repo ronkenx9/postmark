@@ -8,3 +8,4 @@ target/
 .unlazy/
 keys/
 .tools/
+.vercel

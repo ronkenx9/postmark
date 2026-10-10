@@ -1,3 +1,4 @@
+import Tutorial from "./Tutorial.jsx";
 import Globe3D from "./Globe3D.jsx";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -81,6 +82,13 @@ function Map(props) {
   );
 }
 function App() {
+  const [tutorial, setTutorial] = useState(
+    !storage.get("postmark-tutorial", false) && !token(),
+  );
+  function closeTutorial() {
+    storage.set("postmark-tutorial", true);
+    setTutorial(false);
+  }
   const [page, setPage] = useState("home"),
     [profile, setProfile] = useState(null),
     [name, setName] = useState(storage.get("postmark-name", "")),
@@ -95,16 +103,17 @@ function App() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [page, room?.phase]);
   useEffect(() => {
+    const saved = storage.get("postmark-room", null);
     if (token())
       api("/me")
-        .then(setProfile)
-        .catch(() => {});
-    const saved = storage.get("postmark-room", null);
-    if (saved && token() && !invitedRoom)
-      api("/rooms/" + saved)
-        .then((r) => {
-          setRoom(r);
-          setPage("game");
+        .then(async (p) => {
+          setProfile(p);
+          // Restore identity before the result screen compares player scores.
+          if (saved && !invitedRoom) {
+            const r = await api("/rooms/" + saved);
+            setRoom(r);
+            setPage("game");
+          }
         })
         .catch(() => {});
   }, []);
@@ -213,6 +222,7 @@ function App() {
           postmark<span className="brand-dot">®</span>
         </button>
         <nav>
+          <button onClick={() => setTutorial(true)}>How to play</button>
           <button
             className={page === "home" || page === "game" ? "active" : ""}
             onClick={() => setPage(room ? "game" : "home")}
@@ -241,6 +251,7 @@ function App() {
           <strong>EST. 2026 · VOL. 001</strong>
         </div>
       </header>
+      {tutorial && <Tutorial onClose={closeTutorial} />}
       <main id="main">
         {error && (
           <div className="error" role="alert">
@@ -414,7 +425,7 @@ function App() {
               <span className="mode">
                 {room.chain.verified
                   ? "MagicBlock verified"
-                  : "Local play · chain pending"}
+                  : "Casual play · chain pending"}
               </span>
             </div>
             {room.phase === "lobby" ? (

@@ -1231,3 +1231,84 @@ footer span {
     letter-spacing: 0.4px;
   }
 }
+
+.tutorial {
+  width: min(700px, calc(100vw - 28px));
+  max-height: 92dvh;
+  overflow-y: auto;
+  border: 1px solid #b3c1b0;
+  padding: 28px;
+  background: #f5f2e9;
+  color: #254638;
+  border-radius: 10px;
+  box-shadow: 0 24px 100px #10271944;
+}
+.tutorial::backdrop {
+  background: #13251bcc;
+  backdrop-filter: blur(5px);
+}
+.tutorial-top,
+.tutorial-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.tutorial-top button {
+  font-size: 26px;
+}
+.tutorial button {
+  cursor: pointer;
+}
+.tutorial h2 {
+  font:
+    40px "Libre Caslon Display",
+    serif;
+  margin: 16px 0 10px;
+}
+.tutorial p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.tutorial .globe-scene {
+  height: 300px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.tutorial-actions {
+  margin-top: 18px;
+}
+.tutorial-actions .primary {
+  width: auto;
+  padding: 14px 18px;
+}
+.tutorial-status {
+  font-size: 12px !important;
+  min-height: 22px;
+}
+.tutorial-passport {
+  padding: 40px 20px;
+  border: 1px dashed #9aa68f;
+  text-align: center;
+}
+.tutorial-passport span {
+  display: block;
+  font-size: 64px;
+}
+@media (max-width: 600px) {
+  .tutorial {
+    padding: 18px;
+  }
+  .tutorial h2 {
+    font-size: 32px;
+  }
+  header nav {
+    gap: 10px;
+  }
+  header nav button {
+    font-size: 10px;
+  }
+  .tutorial .globe-scene {
+    height: 280px;
+  }
+}

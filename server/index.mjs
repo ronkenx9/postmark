@@ -2,9 +2,11 @@ import http from "node:http";
 import { resolve, sep, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createReadStream, existsSync, statSync } from "node:fs";
-import { Chain } from "./chain.mjs";
-const chain = process.env.POSTMARK_CHAIN === "devnet" ? new Chain() : null;
-let mutationTail = Promise.resolve();
+// Casual hosting does not load chain tooling or require a transaction signer.
+const chain = process.env.POSTMARK_CHAIN === "devnet"
+  ? new (await import("./chain.mjs")).Chain()
+  : null;
+import { beginStorage, storageMode } from "./storage.mjs";
 const dist = resolve(fileURLToPath(new URL("../dist/", import.meta.url)));
 const buckets = new Map();
 function staticFile(req, res) {
@@ -56,29 +58,8 @@ function staticFile(req, res) {
   else createReadStream(file).pipe(res);
 }
 import { randomBytes } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync, renameSync } from "node:fs";
 import { createRoom, joinRoom, guess, nextRound, publicRoom } from "./game.mjs";
-const dir = new URL(
-  "file://" +
-    resolve(
-      process.env.POSTMARK_DATA_DIR ||
-        fileURLToPath(new URL("../.data/", import.meta.url)),
-    ) +
-    "/",
-);
-mkdirSync(dir, { recursive: true });
-const file = new URL("state.json", dir);
-let db = { profiles: {}, rooms: {} };
-try {
-  db = JSON.parse(readFileSync(file, "utf8"));
-} catch (e) {
-  if (e.code !== "ENOENT") throw e;
-}
-const save = () => {
-  writeFileSync(new URL("state.tmp", dir), JSON.stringify(db), { mode: 0o600 });
-  renameSync(new URL("state.tmp", dir), file);
-};
-function award(room) {
+function award(room, db) {
   if (room.phase !== "finished") return;
   for (const id of room.players) {
     const p = db.profiles[id];
@@ -109,7 +90,25 @@ function guideGuess(room) {
     lng: ((target.lng + 12 + 180) % 360) - 180,
   });
 }
-const server = http.createServer(async (req, res) => {
+export async function handle(req, response) {
+  if (!req.url.startsWith("/api/")) {
+    staticFile(req, response);
+    return;
+  }
+  let status = 200,
+    output = "",
+    transaction;
+  const res = {
+    setHeader: (...args) => response.setHeader(...args),
+    writeHead: (code) => {
+      status = code;
+    },
+    end: (body) => {
+      output = body ?? "";
+    },
+  };
+  let db, save;
+
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -120,7 +119,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
-  let release = () => {};
+
   try {
     if (req.method === "GET" && req.url === "/api/health") {
       res.end(
@@ -128,23 +127,33 @@ const server = http.createServer(async (req, res) => {
           ok: true,
           chain: chain ? "magicblock-devnet" : "local",
           chainConfigured: !!chain,
+          storage: storageMode,
         }),
       );
       return;
     }
     let text = "";
-    for await (const chunk of req) {
-      text += chunk;
-      if (text.length > 4096) {
-        res.writeHead(413);
-        res.end(JSON.stringify({ error: "Request too large." }));
-        return;
+    if (req.body === undefined)
+      for await (const chunk of req) {
+        text += chunk;
+        if (text.length > 4096) {
+          res.writeHead(413);
+          res.end(JSON.stringify({ error: "Request too large." }));
+          return;
+        }
       }
-    }
-    const body = text ? JSON.parse(text) : {};
+    const body = req.body ?? (text ? JSON.parse(text) : {});
     if (!body || typeof body !== "object" || Array.isArray(body))
       throw new Error("Invalid request.");
-    const address = req.socket.remoteAddress;
+    if (JSON.stringify(body).length > 4096) {
+      res.writeHead(413);
+      res.end(JSON.stringify({ error: "Request too large." }));
+      return;
+    }
+    const address =
+      process.env.VERCEL === "1"
+        ? req.headers["x-vercel-forwarded-for"] || req.socket.remoteAddress
+        : req.socket.remoteAddress;
     const now = Date.now();
     let bucket = buckets.get(address);
     if (!bucket || now - bucket.start > 60000) {
@@ -161,11 +170,12 @@ const server = http.createServer(async (req, res) => {
     if (buckets.size > 1000)
       for (const [k, v] of buckets)
         if (now - v.start > 60000) buckets.delete(k);
-    const prior = mutationTail;
-    mutationTail = new Promise((resolve) => {
-      release = resolve;
-    });
-    await prior;
+    if (chain && storageMode === "postgres")
+      throw new Error(
+        "Live chain hosting awaits durable transaction recovery verification.",
+      );
+    transaction = await beginStorage(req.method !== "GET");
+    ({ db, save } = transaction);
     const token = req.headers.authorization?.replace(/^Bearer /, "");
     let id = Object.keys(db.profiles).find(
       (k) => db.profiles[k].token === token && token,
@@ -184,7 +194,7 @@ const server = http.createServer(async (req, res) => {
           matches: [],
         };
       } else db.profiles[id].name = name;
-      save();
+      await save();
       res.end(JSON.stringify(db.profiles[id]));
       return;
     }
@@ -209,7 +219,7 @@ const server = http.createServer(async (req, res) => {
         joinRoom(room, "guide");
         guideGuess(room);
       }
-      save();
+      await save();
       res.end(
         JSON.stringify(
           publicRoom(room, id, {
@@ -253,7 +263,7 @@ const server = http.createServer(async (req, res) => {
           );
         room.pendingGuesses[pendingKey] = { lat: body.lat, lng: body.lng };
         draft.pendingGuesses = room.pendingGuesses;
-        save();
+        await save();
         const locked = await chain.lock(
           room.code,
           room.round,
@@ -275,7 +285,7 @@ const server = http.createServer(async (req, res) => {
           draft.chain.result = await chain.finish(room.code);
       }
       Object.assign(room, draft);
-      award(room);
+      award(room, db);
     }
     if (req.method === "POST" && match[2] === "next") {
       nextRound(room, id);
@@ -284,7 +294,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method !== "GET" && req.method !== "POST")
       throw new Error("Method not supported.");
-    if (req.method === "POST") save();
+    if (req.method === "POST") await save();
     res.end(
       JSON.stringify(
         publicRoom(room, id, {
@@ -297,17 +307,33 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(400);
     res.end(
       JSON.stringify({
-        error: e instanceof SyntaxError ? "Invalid request." : e.message,
+        error:
+          e instanceof SyntaxError
+            ? "Invalid request."
+            : e.code
+              ? "Storage is temporarily unavailable. Please retry."
+              : e.message,
       }),
     );
   } finally {
-    release();
+    try {
+      if (transaction) await transaction.close(status < 400);
+    } catch {
+      status = 503;
+      output = JSON.stringify({
+        error: "Could not save your game. Please retry.",
+      });
+    }
+    response.writeHead(status);
+    response.end(output);
   }
-});
+}
+const server = http.createServer(handle);
 server.requestTimeout = 10000;
 server.headersTimeout = 10000;
-server.listen(
-  Number(process.env.PORT || 4327),
-  process.env.HOST || "127.0.0.1",
-  () => console.log("Postmark game server ready"),
-);
+if (process.env.VERCEL !== "1")
+  server.listen(
+    Number(process.env.PORT || 4327),
+    process.env.HOST || "127.0.0.1",
+    () => console.log("Postmark game server ready"),
+  );
