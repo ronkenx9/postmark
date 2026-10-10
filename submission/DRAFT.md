@@ -21,7 +21,7 @@ Do not claim deployed MagicBlock gameplay or attach an invented explorer link. A
 ## Two-minute demo outline
 
 0:00–0:15: Introduce the duel and collectible-passport concept on the landing screen.
-0:15–0:30: Create a room; a second traveller joins by code.
+0:15–0:30: Create a room; copy an invitation link and a second traveller joins with the code prefilled.
 0:30–0:55: Both read a clue and place pins; show that the first guess stays hidden.
 0:55–1:15: Reveal the destination, distance and points. Advance through the match.
 1:15–1:35: Open the passport and show earned stamps and persistence after reload.
@@ -29,4 +29,6 @@ Do not claim deployed MagicBlock gameplay or attach an invented explorer link. A
 
 ## Remaining submission fields
 
-Public website, public repository, demo video and real integration explorer proof must be added after publishing. Event availability must first be confirmed; current public portal reports no open events.
+Public repository: https://github.com/ronkenx9/postmark
+
+Public website, demo video and real integration explorer proof remain pending. Event availability must first be confirmed; current public portal reports no open events.

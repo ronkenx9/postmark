@@ -38,6 +38,9 @@ const storage = {
   },
 };
 const token = () => storage.get("postmark-token", "");
+const invitation =
+  new URLSearchParams(window.location.search).get("room")?.toUpperCase() || "";
+const invitedRoom = /^[A-Z0-9]{6}$/.test(invitation) ? invitation : "";
 async function api(path, body) {
   const res = await fetch("/api" + path, {
     method: body === undefined ? "GET" : "POST",
@@ -246,7 +249,7 @@ function App() {
     [profile, setProfile] = useState(null),
     [name, setName] = useState(storage.get("postmark-name", "")),
     [room, setRoom] = useState(null),
-    [code, setCode] = useState(""),
+    [code, setCode] = useState(invitedRoom),
     [pin, setPin] = useState(null),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
@@ -261,7 +264,7 @@ function App() {
         .then(setProfile)
         .catch(() => {});
     const saved = storage.get("postmark-room", null);
-    if (saved && token())
+    if (saved && token() && !invitedRoom)
       api("/rooms/" + saved)
         .then((r) => {
           setRoom(r);
@@ -313,6 +316,11 @@ function App() {
   }
   async function session() {
     if (profile) return;
+    if (token()) {
+      const existing = await api("/me");
+      setProfile(existing);
+      return;
+    }
     const p = await api("/session", { name });
     storage.set("postmark-token", p.token);
     storage.set("postmark-name", p.name);
@@ -325,6 +333,7 @@ function App() {
     storage.set("postmark-room", r.code);
     setPin(null);
     lastRound.current = -1;
+    window.history.replaceState(null, "", window.location.pathname);
     setPage("game");
   }
   async function join() {
@@ -332,11 +341,16 @@ function App() {
     const r = await api("/rooms/" + code.trim().toUpperCase() + "/join", {});
     setRoom(r);
     storage.set("postmark-room", r.code);
+    setPin(null);
+    lastRound.current = -1;
+    window.history.replaceState(null, "", window.location.pathname);
     setPage("game");
   }
   async function copy() {
     try {
-      await navigator.clipboard.writeText(room.code);
+      const link = new URL(window.location.pathname, window.location.origin);
+      link.searchParams.set("room", room.code);
+      await navigator.clipboard.writeText(link.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -578,8 +592,17 @@ function App() {
                   <br />
                   for a <em>friend.</em>
                 </h2>
-                <p>Send this code. Your trip begins when they join.</p>
-                <button className="room-code" onClick={copy}>
+                <p>
+                  Copy an invite link, or send this code. Your trip begins when
+                  they join.
+                </p>
+                <button
+                  className="room-code"
+                  onClick={copy}
+                  aria-label={
+                    copied ? "Invite link copied" : "Copy invite link"
+                  }
+                >
                   {room.code}
                   {copied ? <Check /> : <Copy size={21} />}
                 </button>

@@ -10,12 +10,12 @@ Working name: Postmark. Editorial travel-journal style: warm ivory, deep navy, v
 
 ## Delivery scopes
 
-1. `.unlazy/game/`: authoritative room state, scoring, round transitions, reconnects, passport records.
-2. `.unlazy/interface/`: responsive lobby, clue, map pinning, reveal, results and passport.
-3. `.unlazy/chain/`: Solana program, MagicBlock delegation/commit flow, integration proof.
-4. `.unlazy/submission/`: live deploy, repository documentation, video and eligibility evidence.
+1. Game: authoritative room state, scoring, round transitions, reconnects, passport records.
+2. Interface: responsive lobby, clue, map pinning, reveal, results and passport.
+3. Chain: Solana program, MagicBlock delegation/commit flow, integration proof.
+4. Submission: live deploy, repository documentation, video and eligibility evidence.
 
-Execute sequentially; no concurrent file ownership. Root GATES.md tracks integrated acceptance. Do not present local simulation as chain verification.
+Solo sequential execution; these are work areas, not delegated branches. Root GATES.md is the acceptance ledger. Do not present local simulation as chain verification.
 
 ## Scope boundaries
 
@@ -23,4 +23,4 @@ Small curated location set; two players; three rounds; deterministic scoring. No
 
 ## Known uncertainties
 
-MagicBlock portal currently reports no open events although saved registration notes say Blitz v9 closes Monday. Confirm before claiming eligibility. Solana/Anchor CLIs are not currently on PATH; Rust and Node are available. No existing wallet or funds will be reused implicitly.
+MagicBlock portal currently reports no open events although saved registration notes say Blitz v9 closes Monday. Confirm before claiming eligibility. Solana tools are installed locally and the program passes local-validator tests. Live devnet funding remains pending. No existing wallet or funds will be reused implicitly.

@@ -24,3 +24,10 @@
 2. Depth: concealed guesses, authoritative distance scoring, independent player sessions and persistent souvenirs.
 3. Correctness: fixed stamp background perforations, stale scroll position across screens, guide display name, Rust compiler selection and Anchor version compatibility. Added pending-coordinate consistency and chain retry checks. Live integration remains unverified.
 4. Polish: mobile globe composition, typography, focus rings, labelled coordinate alternatives, reduced-motion CSS, copy-code action and explicit practice/local mode labels.
+
+## Invitation and release follow-up — October 10
+
+- GitHub's Check game workflow passed on the initial published source (application build, rules and multiplayer API).
+- Browser room 59AC6E: invite button reports copied; a separate localhost identity opens the invitation with code prefilled, joins as River, and places a pin by clicking the map. Reopening the invitation retains the returning identity.
+- Room joins reset the previous pin; existing sessions are fetched before creating a new identity, including during initial profile loading.
+- Latest free devnet wallet balance check remains zero. No deployment or live-chain evidence is claimed.

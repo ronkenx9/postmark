@@ -2,6 +2,8 @@
 
 A little friendly rivalry. A whole world to collect.
 
+![Postmark preview](submission/preview.jpg)
+
 Postmark combines MagicBlock's Geo Duels and World Passport prompts. Two players interpret the same location clues, place hidden pins, and compare their distance after both lock in. Three rounds earn souvenir stamps in a persistent passport. Practice mode is clearly labelled and uses an automated guide.
 
 ## Run locally
@@ -56,7 +58,7 @@ For devnet, fund only the dedicated test wallet with free test SOL, deploy `targ
 
 - Devnet faucet rejected two requests on October 10; no test funds or live program deployment confirmed.
 - MagicBlock's live portal said “No open events to submit to right now” on October 10. Saved registration notes say Blitz v9 closes October 12; organizer confirmation is required before claiming submission eligibility.
-- Public hosting, public repository, final video and submission remain outstanding.
+- Public source is available at [ronkenx9/postmark](https://github.com/ronkenx9/postmark); GitHub's application build and gameplay checks passed. Public hosting, final video and submission remain outstanding.
 - No match expiry/forfeit yet. A disconnected friend can rejoin with their original browser session; losing that session abandons the match.
 - Session tokens are browser-local bearer credentials; protect the host with HTTPS. No cross-device account recovery is implemented.
 - Runtime dependency audit reports two low and five moderate findings through the official MagicBlock and Solana dependency trees. No high or critical findings. Do not perform a blind major-version upgrade; recheck compatibility and the relevant call paths before public release.
