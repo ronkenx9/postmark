@@ -1,13 +1,6 @@
+import Globe3D from "./Globe3D.jsx";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import {
-  geoNaturalEarth1,
-  geoPath,
-  geoOrthographic,
-  geoGraticule10,
-} from "d3-geo";
-import { feature } from "topojson-client";
-import atlas from "world-atlas/countries-110m.json";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -24,7 +17,6 @@ import {
   VolumeX,
 } from "lucide-react";
 import "./style.css";
-const land = feature(atlas, atlas.objects.countries);
 const storage = {
   get(k, f) {
     try {
@@ -55,68 +47,7 @@ async function api(path, body) {
   return data;
 }
 function Globe() {
-  const p = geoOrthographic()
-    .scale(210)
-    .translate([250, 250])
-    .rotate([-15, -20]);
-  const path = geoPath(p);
-  return (
-    <svg
-      className="globe"
-      viewBox="0 0 500 500"
-      aria-label="Illustrated world globe"
-      role="img"
-    >
-      <defs>
-        <radialGradient id="ocean">
-          <stop stopColor="#edf0dc" />
-          <stop offset="1" stopColor="#b5c9b3" />
-        </radialGradient>
-        <radialGradient id="shade" cx="30%" cy="25%" r="75%">
-          <stop offset=".5" stopColor="#112719" stopOpacity="0" />
-          <stop offset="1" stopColor="#112719" stopOpacity=".27" />
-        </radialGradient>
-      </defs>
-      <circle cx="250" cy="250" r="210" fill="url(#ocean)" />
-      <path
-        d={path(geoGraticule10())}
-        fill="none"
-        stroke="#6f8a71"
-        strokeWidth=".6"
-        opacity=".3"
-      />
-      {land.features.map((f, i) => (
-        <path
-          key={i}
-          d={path(f)}
-          fill="#6c875f"
-          stroke="#d4ddbf"
-          strokeWidth=".65"
-        />
-      ))}
-      <circle cx="250" cy="250" r="210" fill="url(#shade)" />
-      <ellipse
-        cx="250"
-        cy="250"
-        rx="243"
-        ry="65"
-        fill="none"
-        stroke="#be603f"
-        strokeWidth="1.5"
-        transform="rotate(-28 250 250)"
-        strokeDasharray="3 5"
-      />
-      <circle cx="444" cy="132" r="6" fill="#e94e30" />
-      <circle
-        cx="444"
-        cy="132"
-        r="12"
-        fill="none"
-        stroke="#e94e30"
-        opacity=".3"
-      />
-    </svg>
-  );
+  return <Globe3D decorative />;
 }
 function Stamp({ stamp, empty = false }) {
   return (
@@ -137,108 +68,13 @@ function Stamp({ stamp, empty = false }) {
     </div>
   );
 }
-function Map({ value, onChange, result, me }) {
-  const svg = useRef();
-  const p = geoNaturalEarth1().fitExtent(
-    [
-      [15, 15],
-      [885, 435],
-    ],
-    { type: "Sphere" },
-  );
-  const path = geoPath(p);
-  function pick(e) {
-    if (!onChange) return;
-    const pt = svg.current.createSVGPoint();
-    pt.x = e.clientX;
-    pt.y = e.clientY;
-    const local = pt.matrixTransform(svg.current.getScreenCTM().inverse());
-    const ll = p.invert([local.x, local.y]);
-    if (
-      ll &&
-      ll.every(Number.isFinite) &&
-      Math.abs(ll[1]) <= 90 &&
-      Math.abs(ll[0]) <= 180
-    )
-      onChange({ lat: +ll[1].toFixed(4), lng: +ll[0].toFixed(4) });
-  }
-  const markers = result
-    ? [
-        { ...result.location, kind: "target" },
-        ...result.entries.map((e) => ({
-          ...e,
-          kind: e.player === me ? "you" : "them",
-        })),
-      ]
-    : value
-      ? [{ ...value, kind: "you" }]
-      : [];
+function Map(props) {
   return (
     <div className="map-frame">
-      <svg
-        ref={svg}
-        viewBox="0 0 900 450"
-        onClick={pick}
-        role="img"
-        aria-label="World map. Click to place a guess, or use the coordinate fields below."
-      >
-        <path d={path({ type: "Sphere" })} fill="#e5e9e0" />
-        <path
-          d={path(geoGraticule10())}
-          fill="none"
-          stroke="#c6d0c3"
-          strokeWidth=".6"
-        />
-        {land.features.map((f, i) => (
-          <path
-            key={i}
-            d={path(f)}
-            fill="#fcfbf5"
-            stroke="#b1beac"
-            strokeWidth=".65"
-          />
-        ))}
-        {result &&
-          result.entries.map((e) => (
-            <path
-              key={e.player}
-              d={path({
-                type: "LineString",
-                coordinates: [
-                  [e.lng, e.lat],
-                  [result.location.lng, result.location.lat],
-                ],
-              })}
-              fill="none"
-              stroke={e.player === me ? "#e94e30" : "#304f83"}
-              strokeWidth="2"
-              strokeDasharray="4 4"
-            />
-          ))}
-        {markers.map((m, i) => {
-          const [x, y] = p([m.lng, m.lat]);
-          return (
-            <g key={i} transform={`translate(${x} ${y})`}>
-              <circle
-                r="12"
-                fill={
-                  m.kind === "target"
-                    ? "#254638"
-                    : m.kind === "you"
-                      ? "#e94e30"
-                      : "#304f83"
-                }
-                stroke="white"
-                strokeWidth="3"
-              />
-              <circle r="3" fill="white" />
-            </g>
-          );
-        })}
-      </svg>
+      <Globe3D {...props} />
       <span className="map-caption">
-        {result
-          ? "● YOU    ● YOUR RIVAL    ● DESTINATION"
+        {props.result
+          ? "ORANGE · YOU    BLUE · YOUR RIVAL    GREEN · DESTINATION"
           : "THE WHOLE WORLD. ONE GOOD GUESS."}
       </span>
     </div>
@@ -662,7 +498,7 @@ function App() {
                         <p>
                           {self?.locked
                             ? "Waiting for your friend. Both guesses reveal together."
-                            : "Tap the map to place your pin, or enter coordinates."}
+                            : "Tap the globe to place your pin, or enter coordinates."}
                         </p>
                       </div>
                       <div className="coordinates">

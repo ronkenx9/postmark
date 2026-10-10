@@ -73,3 +73,7 @@ For devnet, fund only the dedicated test wallet with free test SOL, deploy `targ
 ## Single-server deployment
 
 The backend serves the built frontend and API from one port. `npm run build` followed by `HOST=0.0.0.0 npm run server` is sufficient behind an HTTPS reverse proxy. Use `POSTMARK_DATA_DIR` for a persistent directory. The included Dockerfile builds both; attach a persistent volume to `/data`. The Docker configuration is prepared but has not been container-tested on this Mac.
+
+## Interactive globe
+
+The landing and match screens now render a Three.js sphere with locally generated Natural Earth geography. Drag to rotate, wheel/pinch or use buttons to zoom, and click/tap to place a pin. Drag gestures do not place guesses. Locked rounds disable placement; reveal shows both pins and curved paths to the destination. Coordinate fields remain available for keyboard use and devices without WebGL. Rendering is on demand, with no perpetual idle animation. Desktop mouse input and 390px layout were verified; physical multi-touch testing remains outstanding.

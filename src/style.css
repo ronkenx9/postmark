@@ -1161,3 +1161,73 @@ footer span {
     scroll-behavior: auto !important;
   }
 }
+
+.globe-scene {
+  position: relative;
+  width: 100%;
+  height: 490px;
+  background: radial-gradient(ellipse at center, #f7f4e9 0%, #dce5dc 72%);
+}
+.globe-canvas {
+  width: 100%;
+  height: 100%;
+}
+.globe-canvas canvas {
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+.globe-canvas canvas:active {
+  cursor: grabbing;
+}
+.globe-decorative {
+  height: 500px;
+  background: transparent;
+}
+.globe-tools {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  display: flex;
+  gap: 6px;
+}
+.globe-tools button {
+  padding: 10px 13px;
+  background: #faf8efe8;
+  border: 1px solid #b4c3b3;
+  border-radius: 4px;
+  color: #254638;
+  font: 12px "DM Sans";
+  cursor: pointer;
+}
+.globe-hint {
+  position: absolute;
+  bottom: 16px;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+  font: 9px "DM Mono";
+  letter-spacing: 1px;
+  color: #526659;
+}
+.globe-fallback {
+  position: absolute;
+  inset: 35% 10%;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .globe-scene {
+    height: 380px;
+  }
+  .globe-decorative {
+    height: 350px;
+  }
+  .globe-tools {
+    top: 10px;
+    right: 10px;
+  }
+  .globe-hint {
+    font-size: 7px;
+    letter-spacing: 0.4px;
+  }
+}
