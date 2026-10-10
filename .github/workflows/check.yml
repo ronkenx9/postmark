@@ -1,0 +1,22 @@
+name: Check game
+on: [push, pull_request]
+jobs:
+  game:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Start server and check multiplayer API
+        run: |
+          npm run server > /tmp/postmark.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4327/api/health && break
+            sleep 1
+          done
+          npm run test:api

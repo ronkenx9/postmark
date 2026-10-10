@@ -1,0 +1,1163 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Libre+Caslon+Display&display=swap");
+:root {
+  font-family: "DM Sans", sans-serif;
+  color: #263a30;
+  background: #f5f2e9;
+  font-synthesis: none;
+  --ink: #263a30;
+  --muted: #70766b;
+  --orange: #df492e;
+  --line: #d9d9cd;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  color: inherit;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #e66b45;
+  outline-offset: 5px;
+}
+button {
+  border: 0;
+  background: none;
+}
+a {
+  color: inherit;
+}
+header {
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  margin: 0 5%;
+  gap: 25px;
+}
+.wordmark {
+  display: flex;
+  align-items: center;
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -1.7px;
+  gap: 9px;
+  padding: 0;
+}
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 39px;
+  background: var(--orange);
+  color: #faf6e8;
+  border-radius: 3px;
+  transform: rotate(-7deg);
+}
+.brand-dot {
+  align-self: flex-start;
+  font-size: 10px;
+  margin: 7px 0 0 -5px;
+}
+nav {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+nav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 13px 0;
+  color: #6b7469;
+}
+nav button.active {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.count {
+  font-size: 10px;
+  background: #e7e6dd;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+.edition {
+  font:
+    9px/1.8 "DM Mono",
+    monospace;
+  letter-spacing: 1.2px;
+  text-align: right;
+}
+.edition strong {
+  font-weight: 400;
+  color: var(--muted);
+}
+main {
+  max-width: 1600px;
+  margin: auto;
+  padding: 0 5%;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 710px;
+  padding-top: 65px;
+  gap: 30px;
+}
+.eyebrow {
+  font:
+    10px "DM Mono",
+    monospace;
+  letter-spacing: 1.6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #547657;
+  display: inline-block;
+  box-shadow: 0 0 0 4px #54765712;
+}
+h1 {
+  font-family: "Libre Caslon Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(70px, 7.6vw, 118px);
+  line-height: 0.91;
+  letter-spacing: -4px;
+  margin: 25px 0;
+}
+em {
+  font-family: "Libre Caslon Display", Georgia, serif;
+  font-weight: 400;
+  color: var(--orange);
+}
+.intro {
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+  margin: 26px 0 12px;
+}
+.description {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin: 0 0 28px;
+}
+.ticket {
+  max-width: 364px;
+  background: #fcfbf6;
+  border: 1px solid var(--line);
+  padding: 17px 20px 8px;
+  position: relative;
+  box-shadow: 0 6px 16px #203a2005;
+}
+.ticket:before,
+.ticket:after {
+  content: "";
+  position: absolute;
+  top: 45px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f5f2e9;
+  border: 1px solid var(--line);
+}
+.ticket:before {
+  left: -8px;
+  border-left-color: transparent;
+}
+.ticket:after {
+  right: -8px;
+  border-right-color: transparent;
+}
+.ticket-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font: 9px "DM Mono";
+  letter-spacing: 1px;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 13px;
+  margin-bottom: 16px;
+}
+.ticket-head span:last-child {
+  margin-left: auto;
+}
+.name-label {
+  display: block;
+  font: 8px "DM Mono";
+  letter-spacing: 1px;
+}
+.name-label input {
+  display: block;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  width: 100%;
+  padding: 10px 0;
+  margin-bottom: 13px;
+  font: 13px "DM Sans";
+  letter-spacing: 0;
+}
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: var(--orange);
+  color: #fffdf4;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 16px 20px;
+  border-radius: 4px;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.primary:not(:disabled):hover {
+  background: #c33820;
+  transform: translateY(-1px);
+}
+.ticket .primary {
+  width: 100%;
+}
+.join-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 0 2px;
+}
+.join-row input {
+  border: 0;
+  background: transparent;
+  min-width: 0;
+  flex: 1;
+  font-size: 11px;
+  padding: 9px 0;
+}
+.join-row button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+}
+.practice-link {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 17px 0;
+  color: var(--muted);
+}
+.welcome {
+  font-size: 13px;
+  margin: 18px 0;
+}
+.hero-art {
+  position: relative;
+  align-self: center;
+  min-width: 0;
+  min-height: 550px;
+  margin-top: -30px;
+}
+.globe {
+  width: 100%;
+  filter: drop-shadow(15px 30px 14px #304f2414);
+}
+.hero-art > .globe {
+  margin-top: 0;
+  transform: rotate(-9deg);
+}
+.orbit-label {
+  position: absolute;
+  left: 30%;
+  top: -8px;
+  transform: rotate(-9deg);
+  font: 9px "DM Mono";
+  letter-spacing: 1.6px;
+  color: var(--muted);
+}
+.stamp {
+  --stamp: #b94b38;
+  position: relative;
+  background: #fffdf5;
+  width: 143px;
+  padding: 7px;
+  filter: drop-shadow(2px 5px 4px #263a3010);
+  background: #fffdf5;
+  outline: 3px dotted #fffdf5;
+  outline-offset: 1px;
+  border: 1px solid #d9d3c4;
+  color: var(--stamp);
+}
+.stamp-border {
+  min-height: 160px;
+  border: 1px solid currentColor;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  padding: 10px 4px 9px;
+}
+.stamp-country {
+  text-transform: uppercase;
+  font: 8px "DM Mono";
+  letter-spacing: 1px;
+}
+.stamp-symbol {
+  font-family: Georgia, serif;
+  font-size: 51px;
+  line-height: 1.3;
+  margin-top: 5px;
+}
+.stamp strong {
+  font-family: "Libre Caslon Display", Georgia;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 1.05;
+}
+.stamp-small {
+  font: 7px "DM Mono";
+  letter-spacing: 1px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+.floating-stamp {
+  position: absolute;
+  z-index: 2;
+}
+.floating-stamp.one {
+  left: 1%;
+  bottom: 34px;
+  transform: rotate(-13deg);
+}
+.floating-stamp.two {
+  right: 0;
+  top: 30px;
+  transform: rotate(13deg);
+}
+.postmark-seal {
+  position: absolute;
+  right: 5%;
+  bottom: 26px;
+  border: 1px solid #b76148;
+  border-radius: 50%;
+  width: 128px;
+  height: 128px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #b76148;
+  transform: rotate(13deg);
+  outline: 1px solid #b76148;
+  outline-offset: 4px;
+}
+.postmark-seal span,
+.postmark-seal small {
+  font: 7px "DM Mono";
+  letter-spacing: 0.7px;
+}
+.art-coordinate {
+  display: block;
+  font: 8px/1.8 "DM Mono";
+  color: var(--muted);
+  text-align: center;
+  margin-top: 25px;
+  letter-spacing: 1px;
+}
+.trip-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-top: 45px;
+  padding: 27px 0;
+  gap: 20px;
+}
+.trip-strip > div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-left: 25px;
+  border-left: 1px solid var(--line);
+}
+.trip-strip > div:first-child {
+  border: 0;
+  padding: 0;
+}
+.step-no {
+  font-family: "Libre Caslon Display", Georgia;
+  font-size: 36px;
+  color: #a4ab9e;
+}
+.trip-strip strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.trip-strip p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+.bottom-note {
+  display: flex;
+  justify-content: space-between;
+  font: 8px "DM Mono";
+  letter-spacing: 1px;
+  color: var(--muted);
+  padding: 20px 0 40px;
+}
+footer {
+  border-top: 1px solid var(--line);
+  margin: 0 5%;
+  padding: 23px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font: 8px "DM Mono";
+  letter-spacing: 0.8px;
+  color: var(--muted);
+}
+footer span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.error {
+  position: relative;
+  z-index: 5;
+  border: 1px solid #ca5b44;
+  background: #fff0e9;
+  padding: 16px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 13px;
+}
+.skip {
+  position: absolute;
+  top: -100px;
+  left: 10px;
+  background: white;
+  padding: 15px;
+  z-index: 9;
+}
+.skip:focus {
+  top: 10px;
+}
+.game {
+  min-height: 75vh;
+  padding-bottom: 50px;
+}
+.game-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 24px 0 30px;
+}
+.back {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  padding: 0;
+}
+.mode {
+  font: 9px "DM Mono";
+  color: var(--muted);
+}
+.lobby {
+  text-align: center;
+  padding: 20px 0 80px;
+  position: relative;
+}
+.lobby .eyebrow {
+  justify-content: center;
+}
+.lobby h2 {
+  font: 76px/0.97 "Libre Caslon Display";
+  letter-spacing: -2px;
+  margin: 25px 0;
+}
+.lobby p {
+  font-size: 14px;
+  color: var(--muted);
+}
+.lobby-globe {
+  position: absolute;
+  width: 280px;
+  right: 0;
+  top: 0;
+  opacity: 0.14;
+  pointer-events: none;
+}
+.room-code {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  font: 34px "DM Mono";
+  letter-spacing: 6px;
+  background: #fffcf4;
+  border: 1px dashed #bcc4b7;
+  padding: 20px 30px;
+  margin: 35px auto 25px;
+}
+.waiting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 19px 0;
+  gap: 10px;
+}
+.scoreboard > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  font-size: 13px;
+}
+.scoreboard strong {
+  font: 27px "Libre Caslon Display";
+  margin: 0 15px;
+}
+.scoreboard small {
+  display: block;
+  font: 7px "DM Mono";
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.avatar {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ebd6bb;
+  color: #83442c;
+  flex-shrink: 0;
+}
+.avatar.rival {
+  background: #d9e2e2;
+  color: #304f83;
+}
+.round-label {
+  font: 10px "DM Mono";
+  text-align: center;
+  white-space: nowrap;
+}
+.clue {
+  text-align: center;
+  max-width: 680px;
+  margin: 35px auto 30px;
+}
+.clue .eyebrow {
+  justify-content: center;
+}
+.clue h2,
+.reveal-heading h2 {
+  font: 48px/1.05 "Libre Caslon Display";
+  letter-spacing: -1px;
+  margin: 18px 0 14px;
+}
+.clue p,
+.reveal-heading p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 580px;
+  margin: 0 auto;
+}
+.map-frame {
+  position: relative;
+  background: #e5e9e0;
+  border: 1px solid #c6d0c3;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.map-frame svg {
+  display: block;
+  width: 100%;
+  max-height: 430px;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+.map-caption {
+  display: block;
+  text-align: center;
+  font: 7px "DM Mono";
+  letter-spacing: 1.4px;
+  color: #5f705e;
+  padding: 0 10px 12px;
+}
+.guess-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 24px;
+}
+.guess-controls strong {
+  font-size: 13px;
+}
+.guess-controls p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 0;
+}
+.coordinates {
+  display: flex;
+  gap: 9px;
+}
+.coordinates label {
+  font: 8px "DM Mono";
+  color: var(--muted);
+}
+.coordinates input {
+  display: block;
+  border: 1px solid var(--line);
+  background: #fcfbf6;
+  border-radius: 3px;
+  width: 83px;
+  padding: 8px;
+  margin-top: 4px;
+  font: 11px "DM Mono";
+}
+.guess-controls .primary {
+  white-space: nowrap;
+}
+.reveal-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  padding: 30px 0;
+}
+.reveal-heading .stamp {
+  width: 115px;
+  transform: rotate(7deg);
+  flex-shrink: 0;
+}
+.reveal-heading .stamp-border {
+  min-height: 132px;
+}
+.reveal-heading .stamp-symbol {
+  font-size: 32px;
+}
+.reveal-heading p {
+  margin: 0;
+}
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin: 25px 0;
+}
+.result-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.result-row > div > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.result-row strong {
+  font-size: 22px;
+}
+.result-row small {
+  font-size: 11px;
+  font-weight: 400;
+}
+.result-row .points {
+  font: 10px "DM Mono";
+  color: var(--orange);
+}
+.result-row .primary {
+  margin-left: auto;
+}
+.award-note {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding-top: 15px;
+}
+.passport {
+  padding: 55px 0;
+}
+.passport-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.passport h1 {
+  font-size: 85px;
+}
+.passport-title p {
+  font-size: 14px;
+  color: var(--muted);
+}
+.passport-number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  padding: 30px;
+}
+.passport-number strong {
+  font: 65px "Libre Caslon Display";
+}
+.passport-number span {
+  font: 8px "DM Mono";
+  letter-spacing: 1px;
+}
+.passport-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 35px 0;
+  font: 9px "DM Mono";
+  color: var(--muted);
+}
+.passport-meta strong {
+  color: var(--ink);
+  margin-left: 10px;
+}
+.stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+.passport-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+}
+.passport-entry .stamp {
+  width: 100%;
+  max-width: 155px;
+  transform: rotate(-3deg);
+}
+.passport-entry:nth-child(even) .stamp {
+  transform: rotate(4deg);
+}
+.passport-entry > span {
+  font-size: 10px;
+}
+.passport-entry > small {
+  font-size: 8px;
+  color: var(--muted);
+  text-align: center;
+}
+.empty {
+  opacity: 0.38;
+  filter: none;
+  background: transparent;
+  border: 1px dashed #909786;
+}
+.empty .stamp-border {
+  border-style: dashed;
+}
+.empty .stamp-symbol {
+  font-size: 48px;
+}
+.empty strong {
+  font-size: 18px;
+}
+.passport-cta {
+  margin: 45px auto 0;
+}
+.primary:disabled {
+  transform: none;
+}
+@media (min-width: 1450px) {
+  .hero {
+    min-height: 770px;
+  }
+  .hero-art {
+    max-width: 640px;
+  }
+  .hero-copy {
+    padding-left: 25px;
+  }
+}
+@media (max-width: 1000px) {
+  .hero {
+    gap: 10px;
+    min-height: 680px;
+  }
+  .hero-art {
+    min-height: 460px;
+  }
+  .floating-stamp .stamp {
+    width: 115px;
+  }
+  .floating-stamp .stamp-border {
+    min-height: 138px;
+  }
+  .floating-stamp .stamp-symbol {
+    font-size: 35px;
+  }
+  .postmark-seal {
+    width: 105px;
+    height: 105px;
+    right: 1%;
+  }
+  .stamp-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .guess-controls {
+    flex-wrap: wrap;
+  }
+  .guess-controls > div:first-child {
+    flex: 1;
+  }
+  .guess-controls .primary {
+    margin-left: auto;
+  }
+  .edition {
+    display: none;
+  }
+  header {
+    height: 85px;
+  }
+}
+@media (max-width: 650px) {
+  header {
+    margin: 0 6%;
+    height: 80px;
+    gap: 10px;
+  }
+  .wordmark {
+    font-size: 25px;
+  }
+  .brand-icon {
+    width: 29px;
+    height: 32px;
+  }
+  .brand-icon svg {
+    width: 20px;
+  }
+  nav {
+    gap: 15px;
+  }
+  nav button {
+    font-size: 11px;
+  }
+  nav button svg {
+    display: none;
+  }
+  main {
+    padding: 0 6%;
+  }
+  .hero {
+    display: flex;
+    flex-direction: column;
+    padding-top: 35px;
+    gap: 0;
+  }
+  .hero-copy {
+    position: relative;
+    z-index: 2;
+  }
+  .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.2px;
+  }
+  h1 {
+    font-size: 83px;
+    margin-top: 23px;
+  }
+  .intro {
+    font-size: 19px;
+    margin-top: 20px;
+  }
+  .description {
+    font-size: 12px;
+  }
+  .ticket {
+    max-width: none;
+  }
+  .hero-art {
+    order: -1;
+    min-height: 0;
+    height: 125px;
+    width: 100%;
+    margin: 0 0 25px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-art > .globe {
+    position: absolute;
+    width: 260px;
+    right: -5px;
+    top: -70px;
+    margin: 0;
+  }
+  .floating-stamp.one {
+    left: 20px;
+    top: 5px;
+    bottom: auto;
+    transform: rotate(-12deg);
+  }
+  .floating-stamp.one .stamp {
+    width: 87px;
+  }
+  .floating-stamp.one .stamp-border {
+    min-height: 104px;
+    padding: 7px 2px;
+  }
+  .floating-stamp.one .stamp-symbol {
+    font-size: 24px;
+  }
+  .floating-stamp.one .stamp strong {
+    font-size: 21px;
+  }
+  .floating-stamp.one .stamp-country {
+    font-size: 6px;
+  }
+  .floating-stamp.one .stamp-small {
+    font-size: 5px;
+  }
+  .floating-stamp.two,
+  .postmark-seal,
+  .orbit-label,
+  .art-coordinate {
+    display: none;
+  }
+  .trip-strip {
+    grid-template-columns: 1fr;
+    padding: 24px 0;
+    margin-top: 23px;
+    gap: 24px;
+  }
+  .trip-strip > div {
+    padding: 0;
+    border: 0;
+    gap: 19px;
+  }
+  .step-no {
+    font-size: 31px;
+  }
+  .trip-strip strong {
+    font-size: 13px;
+  }
+  .bottom-note {
+    padding: 19px 0 27px;
+    font-size: 7px;
+  }
+  .bottom-note span:last-child {
+    display: none;
+  }
+  footer {
+    margin: 0 6%;
+    font-size: 7px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  footer span:nth-child(2) {
+    order: 3;
+    width: 100%;
+    font-size: 6px;
+  }
+  .game-top {
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .game-top .eyebrow {
+    font-size: 7px;
+  }
+  .mode {
+    width: 100%;
+    font-size: 8px;
+    text-align: right;
+    margin-top: -3px;
+  }
+  .scoreboard > div {
+    gap: 6px;
+    font-size: 11px;
+  }
+  .scoreboard strong {
+    font-size: 21px;
+    margin: 0 5px;
+  }
+  .avatar {
+    width: 25px;
+    height: 25px;
+  }
+  .round-label {
+    font-size: 8px;
+  }
+  .scoreboard small {
+    font-size: 6px;
+  }
+  .clue {
+    margin: 28px auto 24px;
+  }
+  .clue h2,
+  .reveal-heading h2 {
+    font-size: 36px;
+  }
+  .clue p,
+  .reveal-heading p {
+    font-size: 12px;
+  }
+  .map-frame svg {
+    min-height: 225px;
+  }
+  .map-caption {
+    font-size: 6px;
+    letter-spacing: 0.5px;
+  }
+  .guess-controls {
+    gap: 18px;
+  }
+  .guess-controls > div:first-child {
+    flex-basis: 100%;
+  }
+  .coordinates input {
+    width: 65px;
+  }
+  .guess-controls .primary {
+    font-size: 11px;
+    padding: 14px;
+    gap: 12px;
+  }
+  .reveal-heading .stamp {
+    width: 87px;
+  }
+  .reveal-heading .stamp-border {
+    min-height: 110px;
+  }
+  .reveal-heading .stamp-symbol {
+    font-size: 23px;
+  }
+  .reveal-heading .stamp-country {
+    font-size: 6px;
+  }
+  .reveal-heading .stamp strong {
+    font-size: 20px;
+  }
+  .reveal-heading .stamp-small {
+    font-size: 5px;
+  }
+  .result-row {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .result-row .primary {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .lobby h2 {
+    font-size: 65px;
+  }
+  .lobby-globe {
+    width: 180px;
+    top: 40px;
+  }
+  .lobby p {
+    font-size: 12px;
+  }
+  .room-code {
+    font-size: 26px;
+  }
+  .passport {
+    padding: 35px 0;
+  }
+  .passport h1 {
+    font-size: 57px;
+    letter-spacing: -2px;
+  }
+  .passport-title p {
+    font-size: 12px;
+    max-width: 190px;
+  }
+  .passport-number {
+    padding: 17px 10px;
+  }
+  .passport-number strong {
+    font-size: 46px;
+  }
+  .passport-number span {
+    font-size: 6px;
+    letter-spacing: 0;
+  }
+  .passport-meta {
+    font-size: 7px;
+    margin: 25px 0;
+  }
+  .stamp-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px 14px;
+  }
+  .passport-entry .stamp-border {
+    min-height: 127px;
+  }
+  .passport-entry .stamp-country {
+    font-size: 6px;
+  }
+  .passport-entry .stamp-symbol {
+    font-size: 34px;
+  }
+  .passport-entry .stamp strong {
+    font-size: 20px;
+  }
+  .passport-entry .stamp-small {
+    font-size: 5px;
+  }
+  .passport-entry > span {
+    font-size: 8px;
+  }
+  .passport-entry > small {
+    font-size: 7px;
+  }
+  .empty strong {
+    font-size: 15px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

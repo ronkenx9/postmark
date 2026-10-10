@@ -1,0 +1,33 @@
+{
+  "name": "postmark",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4326",
+    "server": "node server/index.mjs",
+    "build": "vite build",
+    "test": "node --test tests/*.test.mjs",
+    "verify:chain": "node scripts/verify-chain.mjs",
+    "test:api": "node scripts/verify-api.mjs",
+    "build:program": "node scripts/build-program.mjs",
+    "test:program": "npm run build:program && node scripts/verify-program.mjs",
+    "format": "prettier --write src server scripts tests"
+  },
+  "dependencies": {
+    "@magicblock-labs/ephemeral-rollups-sdk": "^0.17.3",
+    "@solana/web3.js": "^1.98.0",
+    "d3-geo": "^3.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "prettier": "^3.9.10",
+    "vite": "^6.1.0"
+  }
+}
