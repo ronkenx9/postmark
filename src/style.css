@@ -1312,3 +1312,77 @@ footer span {
     height: 280px;
   }
 }
+
+.chain-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink, #2c3e34);
+  text-decoration: none;
+}
+.chain-chip:hover {
+  text-decoration: underline;
+}
+.ledger {
+  margin-top: 28px;
+  border-top: 1px dashed rgba(44, 62, 52, 0.3);
+  padding-top: 18px;
+}
+.ledger-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.ledger-head a,
+.ledger li a {
+  font: 11px "DM Mono";
+  color: inherit;
+}
+.ledger ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+.ledger li {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(44, 62, 52, 0.08);
+}
+.ledger .what {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ledger .layer {
+  font: 9px "DM Mono";
+  letter-spacing: 0.12em;
+  padding: 4px 6px;
+  border-radius: 4px;
+  text-align: center;
+  border: 1px solid currentColor;
+}
+.ledger .layer.er {
+  color: #c4533a;
+}
+.ledger .layer.solana {
+  color: #2f6b4f;
+}
+.ledger .pending {
+  opacity: 0.6;
+}
+@media (max-width: 640px) {
+  .ledger li {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+  .ledger li a {
+    grid-column: 2;
+  }
+}

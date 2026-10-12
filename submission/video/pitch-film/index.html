@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Postmark Pitch</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&family=Libre+Caslon+Display&display=swap" rel="stylesheet" />
+    <style>
+      :root { --paper: #f4f1e8; --paper2: #ece7da; --ink: #263a30; --muted: #5a6056; --orange: #df492e; --green: #2f6b4f; --line: rgba(38, 58, 48, 0.16); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
+      .scene { position: absolute; inset: 0; }
+      .serif { font-family: "Libre Caslon Display", serif; font-weight: 400; }
+      .mono { font: 500 22px "DM Mono", monospace; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); }
+      .eb { display: flex; align-items: center; gap: 12px; }
+      .eb i { width: 10px; height: 10px; border-radius: 50%; background: var(--orange); display: block; }
+      em { font-style: normal; color: var(--orange); }
+      .w { display: inline-block; }
+      .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      .brand { display: flex; align-items: center; gap: 24px; font: 700 120px/1 "DM Sans"; letter-spacing: -4px; }
+      .mark { width: 130px; height: 130px; border-radius: 28px; background: var(--orange); display: flex; align-items: center; justify-content: center; }
+      .mark svg { width: 76px; height: 76px; }
+      .browser { position: absolute; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 40px 90px rgba(38, 58, 48, 0.22), 0 0 0 1.5px var(--line); }
+      .browser .bar { height: 46px; background: #e9e5d9; display: flex; align-items: center; gap: 9px; padding: 0 18px; }
+      .browser .bar b { width: 13px; height: 13px; border-radius: 50%; background: #d3cdbd; display: block; }
+      .browser .bar span { margin-left: 18px; font: 500 16px "DM Mono"; color: var(--muted); letter-spacing: 0.04em; }
+      .browser img { display: block; width: 100%; }
+      .chip { position: absolute; padding: 18px 28px; border-radius: 999px; background: var(--ink); color: var(--paper); font: 500 30px "DM Sans"; white-space: nowrap; box-shadow: 0 14px 30px rgba(38, 58, 48, 0.25); }
+      .chip.o { background: var(--orange); }
+      .chip.l { background: #fff; color: var(--ink); border: 1.5px solid var(--line); }
+      /* S4 */
+      .vs { position: absolute; top: 380px; width: 720px; height: 420px; border-radius: 28px; background: #fff; border: 1.5px solid var(--line); padding: 54px 56px; box-shadow: 0 30px 70px rgba(38, 58, 48, 0.12); }
+      .vs h3 { font: 56px/1.05 "Libre Caslon Display"; margin-top: 26px; }
+      .vs p { font: 500 34px/1.3 "DM Sans"; color: var(--muted); margin-top: 26px; }
+      .strike { position: absolute; left: 40px; right: 40px; top: 50%; height: 8px; border-radius: 4px; background: var(--orange); transform-origin: left center; display: block; }
+      /* S6 diagram */
+      .lane { position: absolute; left: 120px; right: 120px; height: 300px; border-radius: 30px; }
+      .lane .lbl { position: absolute; left: 36px; top: 28px; }
+      #lane-er { top: 150px; background: rgba(223, 73, 46, 0.08); border: 2px dashed rgba(223, 73, 46, 0.45); }
+      #lane-sol { top: 640px; background: rgba(47, 107, 79, 0.08); border: 2px dashed rgba(47, 107, 79, 0.45); }
+      .node { position: absolute; padding: 22px 28px; border-radius: 20px; background: #fff; border: 2px solid var(--line); font: 500 30px/1.2 "DM Sans"; white-space: nowrap; box-shadow: 0 16px 36px rgba(38, 58, 48, 0.12); }
+      .node small { display: block; font: 500 17px "DM Mono"; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+      .node.er { border-color: rgba(223, 73, 46, 0.6); }
+      .node.sol { border-color: rgba(47, 107, 79, 0.6); }
+      .arrow { position: absolute; width: 6px; border-radius: 3px; transform-origin: top center; display: block; }
+      .arrowlbl { position: absolute; font: 500 20px "DM Mono"; letter-spacing: 0.2em; text-transform: uppercase; }
+      /* S8 */
+      .big { font: 300px/0.9 "Libre Caslon Display"; color: var(--orange); }
+      /* S9 */
+      .road { position: absolute; top: 420px; width: 500px; height: 330px; border-radius: 26px; background: #fff; border: 1.5px solid var(--line); padding: 46px; box-shadow: 0 26px 60px rgba(38, 58, 48, 0.12); }
+      .road .n { font: 500 20px "DM Mono"; letter-spacing: 0.24em; color: var(--orange); }
+      .road h3 { font: 50px/1.08 "Libre Caslon Display"; margin-top: 24px; }
+      .road p { font: 500 26px/1.35 "DM Sans"; color: var(--muted); margin-top: 18px; }
+      .stamp { position: absolute; width: 238px; height: 323px; background-image: url(assets/reveal.jpg); background-size: 3264px 1836px; background-position: -2618px -14px; box-shadow: 0 20px 44px rgba(38, 58, 48, 0.28); border-radius: 6px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="72.5" data-width="1920" data-height="1080">
+      <audio id="vo" src="assets/pitch.mp3" data-start="0.3" data-duration="70.3" data-track-index="9" data-volume="1"></audio>
+      <audio id="music" src="assets/bgm.mp3" data-start="0" data-duration="72.5" data-track-index="10" data-volume="0.08"></audio>
+
+      <!-- S1 0-2.9 -->
+      <section id="s1" class="scene clip" data-start="0" data-duration="2.95" data-track-index="1">
+        <div class="center">
+          <div class="serif" style="font-size: 120px; line-height: 1.05; max-width: 1500px">
+            <span class="w">Everyone</span> <span class="w">has</span> <span class="w">a</span> <span class="w"><em>guess</em></span><br />
+            <span class="w">about</span> <span class="w">where</span> <span class="w">a</span> <span class="w">place</span> <span class="w">is.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- S2 2.9-10.9 -->
+      <section id="s2" class="scene clip" data-start="2.95" data-duration="7.95" data-track-index="1">
+        <div class="center" id="s2-logo">
+          <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /></svg></span>postmark</div>
+          <div class="serif" style="font-size: 64px; margin-top: 36px">turns that guess into a <em>duel.</em></div>
+        </div>
+        <div class="browser" id="s2-br" style="left: 520px; top: 150px; width: 1300px"><div class="bar"><b></b><b></b><b></b><span>postmark-teal.vercel.app</span></div><img src="assets/clue.jpg" alt="" /></div>
+        <div class="chip l" id="s2-c1" style="left: 120px; top: 300px">Same clues</div>
+        <div class="chip l" id="s2-c2" style="left: 120px; top: 440px">Spin a real globe</div>
+        <div class="chip o" id="s2-c3" style="left: 120px; top: 580px">Drop your pins</div>
+      </section>
+
+      <!-- S3 10.9-19.4 -->
+      <section id="s3" class="scene clip" data-start="10.9" data-duration="8.5" data-track-index="1">
+        <div class="browser" id="s3-br" style="left: 110px; top: 120px; width: 1250px"><div class="bar"><b></b><b></b><b></b><span>postmark-teal.vercel.app</span></div><img src="assets/reveal.jpg" alt="" /></div>
+        <div class="chip" id="s3-c1" style="left: 1170px; top: 170px">Hidden until both lock</div>
+        <div class="chip o" id="s3-c2" style="left: 1240px; top: 560px">265 km → +4,380 pts</div>
+        <div class="stamp" id="s3-stamp" style="left: 1500px; top: 690px"></div>
+      </section>
+
+      <!-- S4 19.4-30.4 -->
+      <section id="s4" class="scene clip" data-start="19.4" data-duration="11" data-track-index="1">
+        <div class="serif" id="s4-h" style="position: absolute; left: 0; right: 0; top: 130px; text-align: center; font-size: 96px">Fair <em>timing</em> is everything.</div>
+        <div class="vs" id="s4-a" style="left: 180px">
+          <div class="mono eb"><i></i>Every pin on Solana</div>
+          <h3>Each guess is a slow, paid transaction.</h3>
+          <p>Fun dies waiting on a fee.</p>
+          <span class="strike" id="s4-sa"></span>
+        </div>
+        <div class="vs" id="s4-b" style="left: 1020px">
+          <div class="mono eb"><i></i>A private server</div>
+          <h3>Fast, but nobody can check the record.</h3>
+          <p>"Trust me" is not a scoreboard.</p>
+          <span class="strike" id="s4-sb"></span>
+        </div>
+      </section>
+
+      <!-- S5 30.4-34.5 -->
+      <section id="s5" class="scene clip" data-start="30.4" data-duration="4.1" data-track-index="1">
+        <div class="center">
+          <div class="mono eb" id="s5-k"><i></i>So every Postmark duel runs on</div>
+          <div class="serif" id="s5-t" style="font-size: 132px; line-height: 1.04; margin-top: 30px">a MagicBlock<br /><em>Ephemeral Rollup.</em></div>
+        </div>
+      </section>
+
+      <!-- S6 34.5-52.2 -->
+      <section id="s6" class="scene clip" data-start="34.5" data-duration="17.7" data-track-index="1">
+        <div class="lane" id="lane-er"><div class="lbl mono eb" style="color: #a8321c"><i></i>MagicBlock rollup · instant, free for players</div></div>
+        <div class="lane" id="lane-sol"><div class="lbl mono eb" style="color: #24543d"><i style="background: var(--green)"></i>Solana · the public record</div></div>
+        <div class="node sol" id="n1" style="left: 200px; top: 750px">Match created<small>When your friend joins</small></div>
+        <span class="arrow" id="a1" style="left: 330px; top: 470px; height: 270px; background: var(--green)"></span>
+        <div class="arrowlbl" id="a1l" style="left: 352px; top: 580px; color: var(--green)">Delegated ↑</div>
+        <div class="node er" id="n2" style="left: 200px; top: 250px">Ada's pin sealed<small>Round 1</small></div>
+        <div class="node er" id="n3" style="left: 590px; top: 250px">Bayo's pin sealed<small>Round 1</small></div>
+        <div class="node er" id="n4" style="left: 1000px; top: 250px">Round scored<small>Only once both are locked</small></div>
+        <span class="arrow" id="a2" style="left: 1560px; top: 470px; height: 270px; background: var(--orange)"></span>
+        <div class="arrowlbl" id="a2l" style="left: 1300px; top: 580px; color: var(--orange)">Committed ↓</div>
+        <div class="node er" id="n5" style="left: 1420px; top: 250px">Final score<small>After round 3</small></div>
+        <div class="node sol" id="n6" style="left: 1300px; top: 750px">Final score on Solana<small>Anyone can check it</small></div>
+      </section>
+
+      <!-- S7 52.2-57.7 -->
+      <section id="s7" class="scene clip" data-start="52.2" data-duration="5.5" data-track-index="1">
+        <div class="browser" id="s7-br" style="left: 700px; top: 245px; width: 1100px; height: 590px"><div class="bar"><b></b><b></b><b></b><span>postmark-teal.vercel.app</span></div><div style="position: relative; overflow: hidden; height: 544px"><img id="s7-img" src="assets/ledger.jpg" alt="" style="width: 1488px; margin-left: -178px; margin-top: -236px" /></div></div>
+        <div style="position: absolute; left: 120px; top: 330px; width: 520px">
+          <div class="mono eb" id="s7-k"><i></i>What players see</div>
+          <div class="serif" id="s7-t" style="font-size: 78px; line-height: 1.06; margin-top: 28px">No wallet.<br />No fee.<br /><em>A match ledger.</em></div>
+        </div>
+      </section>
+
+      <!-- S8 57.7-62.0 -->
+      <section id="s8" class="scene clip" data-start="57.7" data-duration="4.3" data-track-index="1">
+        <img src="assets/explorer.jpg" alt="" style="position: absolute; inset: 0; width: 100%; opacity: 0.07" />
+        <div class="center">
+          <div class="mono eb" id="s8-k" style="margin-bottom: 50px"><i></i>Live today on devnet</div>
+          <div class="big" id="s8-n">0</div>
+          <div class="serif" id="s8-t" style="font-size: 70px">transactions a duel, all on <em>MagicBlock.</em></div>
+        </div>
+      </section>
+
+      <!-- S9 62.0-67.8 -->
+      <section id="s9" class="scene clip" data-start="62" data-duration="5.8" data-track-index="1">
+        <div class="serif" id="s9-h" style="position: absolute; left: 0; right: 0; top: 190px; text-align: center; font-size: 96px">What's <em>next</em></div>
+        <div class="road" id="r1" style="left: 160px"><div class="n">01</div><h3>A daily destination</h3><p>One place a day, played by everyone.</p></div>
+        <div class="road" id="r2" style="left: 710px"><div class="n">02</div><h3>Open leagues</h3><p>Seasons, ladders and rivals.</p></div>
+        <div class="road" id="r3" style="left: 1260px"><div class="n">03</div><h3>Passports that travel</h3><p>Your stamps go where you go.</p></div>
+      </section>
+
+      <!-- S10 67.8-72.5 -->
+      <section id="s10" class="scene clip" data-start="67.8" data-duration="4.7" data-track-index="1">
+        <div class="center">
+          <div class="brand" id="s10-b"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /></svg></span>postmark</div>
+          <div class="serif" id="s10-t" style="font-size: 72px; margin-top: 38px">A world worth <em>guessing.</em></div>
+          <div class="mono" id="s10-u" style="margin-top: 40px">postmark-teal.vercel.app · Built on MagicBlock Ephemeral Rollups</div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const V = 0.3; // voiceover offset
+      const inUp = (sel, t, extra = {}) => tl.fromTo(sel, { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out", ...extra }, t + V);
+      const pop = (sel, t) => tl.fromTo(sel, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.8)" }, t + V);
+      const out = (sel, t) => tl.to(sel, { opacity: 0, y: -20, duration: 0.3, ease: "power2.in" }, t + V);
+
+      // S1
+      tl.fromTo("#s1 .w", { y: 50, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.5, stagger: 0.18, ease: "power3.out" }, 0.1);
+      out("#s1 .serif", 2.35);
+
+      // S2
+      tl.fromTo("#s2-logo .brand", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.6)" }, 2.95);
+      inUp("#s2-logo .serif", 3.4);
+      out("#s2-logo", 5.1);
+      tl.fromTo("#s2-br", { x: 300, opacity: 0, rotation: 2 }, { x: 0, opacity: 1, rotation: 0, duration: 0.8, ease: "power3.out" }, 5.3 + V);
+      pop("#s2-c1", 5.57); pop("#s2-c2", 7.74); pop("#s2-c3", 8.96);
+      tl.to("#s2-br img", { y: -60, duration: 4.5, ease: "none" }, 6.0);
+
+      // S3
+      tl.fromTo("#s3-br", { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 10.9);
+      pop("#s3-c1", 10.76);
+      pop("#s3-c2", 15.49);
+      tl.fromTo("#s3-stamp", { x: 300, y: -200, rotation: 30, opacity: 0 }, { x: 0, y: 0, rotation: -8, opacity: 1, duration: 0.7, ease: "back.out(1.4)" }, 16.93 + V);
+      tl.to("#s3-br", { scale: 1.04, duration: 8, ease: "none" }, 11.2);
+
+      // S4
+      inUp("#s4-h", 19.47);
+      inUp("#s4-a", 22.59);
+      inUp("#s4-b", 26.81);
+      tl.fromTo("#s4-sa", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, 25.2 + V);
+      tl.to("#s4-a", { opacity: 0.45, duration: 0.3 }, 25.6 + V);
+      tl.fromTo("#s4-sb", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, 29.3 + V);
+      tl.to("#s4-b", { opacity: 0.45, duration: 0.3 }, 29.7 + V);
+
+      // S5
+      inUp("#s5-k", 30.43);
+      inUp("#s5-t", 31.4, { duration: 0.8 });
+
+      // S6 diagram
+      inUp("#lane-er", 34.4); inUp("#lane-sol", 34.4);
+      pop("#n1", 35.93);
+      tl.fromTo("#a1", { scaleY: 0, transformOrigin: "bottom center" }, { scaleY: 1, duration: 0.6, ease: "power2.inOut" }, 37.4 + V);
+      inUp("#a1l", 37.6);
+      pop("#n2", 39.23); pop("#n3", 40.2);
+      pop("#n4", 43.22);
+      pop("#n5", 46.59);
+      tl.fromTo("#a2", { scaleY: 0, transformOrigin: "top center" }, { scaleY: 1, duration: 0.6, ease: "power2.inOut" }, 47.77 + V);
+      inUp("#a2l", 47.9);
+      pop("#n6", 48.6);
+      tl.to("#n6", { scale: 1.08, duration: 0.3, yoyo: true, repeat: 1, ease: "sine.inOut" }, 50.4 + V);
+
+      // S7
+      tl.fromTo("#s7-br", { x: 200, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 52.2);
+      inUp("#s7-k", 52.29); inUp("#s7-t", 52.6);
+      tl.fromTo("#s7-img", { scale: 1.0 }, { scale: 1.03, duration: 5, ease: "none" }, 52.5);
+
+      // S8 counter
+      inUp("#s8-k", 57.77);
+      const c = { v: 0 };
+      tl.fromTo(c, { v: 0 }, { v: 12, duration: 1.2, ease: "power2.out", onUpdate: () => { document.getElementById("s8-n").textContent = Math.round(c.v); } }, 58.88 + V);
+      inUp("#s8-t", 59.2);
+
+      // S9
+      inUp("#s9-h", 62.0);
+      inUp("#r1", 62.3); inUp("#r2", 64.9); inUp("#r3", 65.65);
+
+      // S10
+      tl.fromTo("#s10-b", { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.6)" }, 67.85);
+      inUp("#s10-t", 68.75);
+      inUp("#s10-u", 69.6);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

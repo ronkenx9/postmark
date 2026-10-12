@@ -1,0 +1,63 @@
+{
+  "code": "8A032E",
+  "startedAt": "2026-10-12T16:46:07.507Z",
+  "mode": "magicblock-devnet",
+  "verified": true,
+  "address": "B3WwYktUW6QarEarpDa8WnGsr66jhfNuYSuKsURSozbZ",
+  "validator": "MUS3hc9TCw4cGC12vHNoYcCGzJG1txjgQLZWVoeNHNd",
+  "initialize": "GNF2paGAteR8ycbqB4NuAuxaQKpRDUgTgbEZhhRBKE86rgr5rUiRh6FxNEJ7wPAiVzoF8baCyLayFpzRJwsktEB",
+  "delegate": "5NWMRc2vUfgdje78WNojFawwteLLmfsFeLrsgL93RS97tqSByXx5hn2iHsdSvk2CdViVtAhN8fErtzvcjdRZGjWo",
+  "transactions": [
+    {
+      "signature": "58NmvFd7CVVVzoFbvMC8kdvBekS6GsrjTdiBst7DJdYpXti8QS5w7Sftr3sprdqtaRQt9FbFnqrvrbHBeGBortDS",
+      "commitment": "664693e5bf2d97ffc6f7fb4bc6f3db0deaa0e69340c6d862ae6516864370a380"
+    },
+    {
+      "signature": "3V1jT5orkD1gSDqhEwBya5G1n7ha5LV5DXKq6YnsjrmKrXveBMVJLSdpLmJd5fVF12XxueDdXjDnG3MntGa7iu1F",
+      "commitment": "275e603a079a3d1ec989f635aab5cb0aa55e76be9db39230db73ae882b540984"
+    },
+    {
+      "signature": "3sGqvoZUC2gwSoje92ScKbkgx6mvdo4QbuhVh54147ueYYKN3KahKVn4vKiVtQrPYgGJWzj3FsZtBotVAQdoEkiB"
+    },
+    {
+      "signature": "4GzfzanLUYuvTteWg6jHybzUGZk5hYbs5PgfSMEqpxYhmuSdvSa82dQf3SqPvypHA2qGixQStJw4aTsiSGZjjNRt",
+      "commitment": "be0f4b01212eeef66bab75eefbd01e99daa71ec5b2202f097e166a5bf8a24c26"
+    },
+    {
+      "signature": "5X6cSxVph1dpAjrdRb4hQehYHBkm37K1UkrPKuMww2BPkj4muyb6xw7ubvL32QP2inWFRVMPES8ubEvVsbTe6rwH",
+      "commitment": "b387f956f60f3de31595d099ab8fa7396e258226762e110f5985e5313c7a400f"
+    },
+    {
+      "signature": "2z8NXpieo86c4vFnb26CnPWmkannnBQiBGsENiDBHQPVZLrt3emLMr1BZScGV1YFdMHWvoLgnpwRLkj1Hr4TFWzN"
+    },
+    {
+      "signature": "4Ap1apxXumCgrtC2UAq6UiYHZEV9m5bNQLEVMZpeVWTrRYF64FFVTzBthCcf2M1Z9NAeV9JNU2yzQGxnSw6ri12x",
+      "commitment": "2c08f6eab8b8fb064258423db2694447f06853db7bac647169251d189883ab7d"
+    },
+    {
+      "signature": "22HTtQRYoMXZVwGAobczhkWLYQXBHTgWVif4TmgNoaiqdwnwnSgHSskWPy8AaN1VtMbsXeDUnVuiacpXGGuK4uZb",
+      "commitment": "195ce5119cd1b4b7eb2a3906dd4fef89eab10784df0829d406a1178a3a998846"
+    },
+    {
+      "signature": "5PXx7YDn9E7yg6Jq2aDwfFMe1JDnPeAG1pjuQq7FcDGFnJew4SUiczRGdRCcdhGapgrqwzaThPy6pNq14YgdYC4L"
+    }
+  ],
+  "result": {
+    "signature": "382vcafSWrRD9JvVwypoczkWzEkzXaENF1n1KNWy13AS1G7J59KQ7vV6F6FkEeFgMg64YkL6hYeFDRVGcJZPppgS",
+    "state": {
+      "authority": "AbUNCQ37vE2zXHRYxqJcjQ1CtmWtqvLZKBpiRAHcxmuv",
+      "room": "8A032E",
+      "round": 3,
+      "locked": 0,
+      "scores": [
+        12000,
+        9000
+      ],
+      "commitments": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "finished": true
+    }
+  }
+}

@@ -5,7 +5,7 @@
   "outputDirectory": "dist",
   "regions": ["iad1"],
   "rewrites": [{ "source": "/api/:path*", "destination": "/api/game?route=:path*" }],
-  "functions": { "api/game.js": { "maxDuration": 30 } },
+  "functions": { "api/game.js": { "maxDuration": 60 } },
   "headers": [
     {
       "source": "/(.*)",

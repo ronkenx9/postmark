@@ -1,36 +1,28 @@
-# Submission draft — not submitted
+# Submission: MagicBlock Solana Blitz V9
 
-## Project
-
-Postmark — a world worth guessing.
+## Project name
+Postmark
 
 ## Description
+Postmark is a two-player geography duel with a collectible passport. Two friends read the same clues, spin a real 3D globe, drop pins, and both guesses reveal together; distance becomes points and every stop leaves a stamp in your passport.
 
-Postmark turns a geography duel into a travel ritual. Invite a friend, read the same clues, and place your pins. Both guesses reveal together. After three rounds, open a passport filled with souvenir country stamps.
+Every real duel runs on a MagicBlock Ephemeral Rollup. When the second player joins, the match account is created on Solana and delegated to a rollup. Each guess is locked on the rollup as a sealed commitment (instant and free for players), a round can only be scored once both guesses are locked, and when the match ends the final score is committed and undelegated back to Solana. Players never see a wallet or a fee; the game shows a match ledger with an explorer link for every step, 13 per duel. The server is a disclosed scoring oracle and sponsors transactions from a devnet-only wallet.
 
-It combines the Geo Duels and World Passport requests from MagicBlock's idea list. The design uses a travel-journal palette, an interactive 3D globe, boarding-pass invitations, and collectible stamps, with a phone-friendly interface.
+## Categories
+Games, Consumer, Social
 
-## Technical claims permitted now
+## Project website
+https://postmark-teal.vercel.app
 
-The Vercel-hosted multiplayer game is working, with PostgreSQL persistence and an interactive first-play tutorial. The Anchor program compiles and passes local-validator permission and round-transition tests. A MagicBlock delegation and commit adapter is implemented but has not passed live devnet verification.
+## GitHub repo
+https://github.com/ronkenx9/postmark
 
-## Technical claims requiring live evidence
+## Pitch & demo
+[OWNER: upload ~/Downloads/postmark-pitch.mp4 and ~/Downloads/postmark-demo.mp4 (YouTube unlisted / Loom / Drive) and paste the link]
 
-Do not claim deployed MagicBlock gameplay or attach an invented explorer link. Add real initialization, delegation, ER guess, settlement and base-layer final-state proof only after `verify:chain` passes.
+## Explorer link (integration proof)
+https://explorer.solana.com/tx/5NWMRc2vUfgdje78WNojFawwteLLmfsFeLrsgL93RS97tqSByXx5hn2iHsdSvk2CdViVtAhN8fErtzvcjdRZGjWo?cluster=devnet
+(Delegation of a match account to MagicBlock. Full run: submission/chain-evidence.json.)
 
-## Two-minute demo outline
-
-0:00–0:15: Introduce the duel and collectible-passport concept on the landing screen.
-0:15–0:30: Create a room; copy an invitation link and a second traveller joins with the code prefilled.
-0:30–0:55: Both read a clue and place pins; show that the first guess stays hidden.
-0:55–1:15: Reveal the destination, distance and points. Advance through the match.
-1:15–1:35: Open the passport and show earned stamps and persistence after reload.
-1:35–2:00: Show verified MagicBlock transaction evidence when available. Explain that the server sponsors transactions and is the trusted scoring oracle.
-
-## Remaining submission fields
-
-Public repository: https://github.com/ronkenx9/postmark
-
-Public website: https://postmark-teal.vercel.app
-
-Demo video and real integration explorer proof remain pending. Event availability must first be confirmed; current public portal reports no open events.
+## Program address
+F3zG6GJkibp3HB7tFrt32UGaiJaSEarAJ3QWnmgiRqs6

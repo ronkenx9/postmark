@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<title>Postmark Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&family=Libre+Caslon+Display&display=swap" rel="stylesheet">
+<style>
+:root { --paper:#f4f1e8; --ink:#263a30; --muted:#5a6056; --orange:#df492e; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:1920px; height:1080px; overflow:hidden; background:var(--paper); }
+#root { position:relative; width:100%; height:100%; overflow:hidden; background:var(--paper); font-family:"DM Sans",sans-serif; color:var(--ink); }
+video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.card { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--paper); }
+.brand { display:flex; align-items:center; gap:22px; font:700 110px/1 "DM Sans"; letter-spacing:-4px; }
+.mark { width:120px; height:120px; border-radius:26px; background:var(--orange); display:flex; align-items:center; justify-content:center; transform:rotate(-6deg); }
+.mark svg { width:70px; height:70px; }
+.sub { font:60px/1.1 "Libre Caslon Display"; margin-top:34px; }
+.sub em { color:var(--orange); font-style:normal; }
+.kick { font:500 22px "DM Mono"; letter-spacing:.3em; color:var(--muted); margin-top:30px; text-transform:uppercase; }
+.cap { position:absolute; left:56px; bottom:56px; display:flex; flex-direction:column; gap:10px; padding:22px 30px 24px; background:rgba(244,241,232,.96); border:1.5px solid rgba(38,58,48,.18); border-radius:18px; box-shadow:0 18px 40px rgba(38,58,48,.16); }
+.cap.top { bottom:auto; left:auto; top:40px; right:56px; }
+.cap .eb { display:flex; align-items:center; gap:10px; font:500 17px "DM Mono"; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+.cap .eb i { width:9px; height:9px; border-radius:50%; background:var(--orange); display:block; }
+.cap .tx { font:44px/1.05 "Libre Caslon Display"; color:var(--ink); }
+</style></head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="82.45" data-width="1920" data-height="1080">
+<div id="intro" class="card clip" data-start="0" data-duration="2.60" data-track-index="5"><div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/></svg></span>postmark</div><div class="kick">Product demo · MagicBlock Ephemeral Rollups</div></div>
+<video id="v0" class="clip" src="assets/raw.mp4" muted playsinline data-start="2.600" data-media-start="0.000" data-duration="5.100" data-playback-rate="1.0" data-track-index="1"></video>
+<video id="v1" class="clip" src="assets/raw.mp4" muted playsinline data-start="7.700" data-media-start="5.100" data-duration="8.600" data-playback-rate="1.0" data-track-index="1"></video>
+<video id="v2" class="clip" src="assets/raw.mp4" muted playsinline data-start="16.300" data-media-start="13.700" data-duration="8.600" data-playback-rate="1.0" data-track-index="1"></video>
+<video id="v3" class="clip" src="assets/raw.mp4" muted playsinline data-start="24.900" data-media-start="22.300" data-duration="7.100" data-playback-rate="1.0" data-track-index="1"></video>
+<video id="v4" class="clip" src="assets/raw.mp4" muted playsinline data-start="32.000" data-media-start="29.400" data-duration="6.800" data-playback-rate="1.0" data-track-index="1"></video>
+<video id="v5" class="clip" src="assets/raw.mp4" muted playsinline data-start="38.800" data-media-start="36.200" data-duration="14.250" data-playback-rate="1.6" data-track-index="1"></video>
+<video id="v6" class="clip" src="assets/raw.mp4" muted playsinline data-start="53.050" data-media-start="59.000" data-duration="8.700" data-playback-rate="1.0" data-track-index="1"></video>
+<video id="v7" class="clip" src="assets/raw.mp4" muted playsinline data-start="61.750" data-media-start="67.700" data-duration="7.500" data-playback-rate="1.0" data-track-index="1"></video>
+<video id="v8" class="clip" src="assets/raw.mp4" muted playsinline data-start="69.250" data-media-start="75.200" data-duration="10.000" data-playback-rate="1.0" data-track-index="1"></video>
+<div class="cap clip" id="c0" data-start="2.750" data-duration="4.800" data-track-index="2"><span class="eb"><i></i>Postmark</span><span class="tx">Live on Solana devnet</span></div>
+<div class="cap clip" id="c1" data-start="7.850" data-duration="8.300" data-track-index="2"><span class="eb"><i></i>Start a duel</span><span class="tx">Challenge a friend</span></div>
+<div class="cap clip" id="c2" data-start="16.450" data-duration="8.300" data-track-index="2"><span class="eb"><i></i>MagicBlock</span><span class="tx">The match moves onto a rollup</span></div>
+<div class="cap clip" id="c3" data-start="25.050" data-duration="6.800" data-track-index="2"><span class="eb"><i></i>Round one</span><span class="tx">Lock your pin. Reveal together.</span></div>
+<div class="cap clip top" id="c4" data-start="32.150" data-duration="6.500" data-track-index="2"><span class="eb"><i></i>Match ledger</span><span class="tx">Every step, on chain</span></div>
+<div class="cap clip" id="c5" data-start="38.950" data-duration="13.950" data-track-index="2"><span class="eb"><i></i>Rounds two and three</span><span class="tx">No wallet. No fees for players.</span></div>
+<div class="cap clip top" id="c6" data-start="53.200" data-duration="8.400" data-track-index="2"><span class="eb"><i></i>Final score</span><span class="tx">Committed back to Solana</span></div>
+<div class="cap clip" id="c7" data-start="61.900" data-duration="7.200" data-track-index="2"><span class="eb"><i></i>Passport</span><span class="tx">Three stamps collected</span></div>
+<div class="cap clip" id="c8" data-start="69.400" data-duration="9.700" data-track-index="2"><span class="eb"><i></i>Proof</span><span class="tx">Settled on the Solana explorer</span></div>
+<div id="outro" class="card clip" data-start="79.250" data-duration="3.2" data-track-index="5"><div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/></svg></span>postmark</div><div class="sub">A world worth <em>guessing.</em></div><div class="kick">postmark-teal.vercel.app · github.com/ronkenx9/postmark</div></div>
+<audio id="ad1" src="assets/d1.mp3" data-start="2.850" data-duration="2.972" data-track-index="3" data-volume="1"></audio>
+<audio id="ad2" src="assets/d2.mp3" data-start="7.950" data-duration="4.923" data-track-index="3" data-volume="1"></audio>
+<audio id="ad3" src="assets/d3.mp3" data-start="16.550" data-duration="6.920" data-track-index="3" data-volume="1"></audio>
+<audio id="ad4" src="assets/d4.mp3" data-start="25.150" data-duration="7.709" data-track-index="3" data-volume="1"></audio>
+<audio id="ad5" src="assets/d5.mp3" data-start="33.009" data-duration="6.362" data-track-index="3" data-volume="1"></audio>
+<audio id="ad6" src="assets/d6.mp3" data-start="39.521" data-duration="9.056" data-track-index="3" data-volume="1"></audio>
+<audio id="ad7" src="assets/d7.mp3" data-start="53.300" data-duration="5.108" data-track-index="3" data-volume="1"></audio>
+<audio id="ad8" src="assets/d8.mp3" data-start="62.000" data-duration="3.483" data-track-index="3" data-volume="1"></audio>
+<audio id="ad9" src="assets/d9.mp3" data-start="69.500" data-duration="7.709" data-track-index="3" data-volume="1"></audio>
+<audio id="music" src="assets/bgm.mp3" data-start="0" data-duration="82.45" data-track-index="4" data-volume="0.09"></audio>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#intro .brand", { y: 30, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" }, 0.15);
+tl.fromTo("#intro .kick", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.7);
+tl.to("#intro .brand, #intro .kick", { opacity: 0, y: -20, duration: 0.35, ease: "power2.in" }, 2.20);
+tl.fromTo("#c0", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 2.800);
+tl.to("#c0", { opacity: 0, duration: 0.25 }, 7.250);
+tl.fromTo("#c1", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 7.900);
+tl.to("#c1", { opacity: 0, duration: 0.25 }, 15.850);
+tl.fromTo("#c2", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 16.500);
+tl.to("#c2", { opacity: 0, duration: 0.25 }, 24.450);
+tl.fromTo("#c3", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 25.100);
+tl.to("#c3", { opacity: 0, duration: 0.25 }, 31.550);
+tl.fromTo("#c4", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 32.200);
+tl.to("#c4", { opacity: 0, duration: 0.25 }, 38.350);
+tl.fromTo("#c5", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 39.000);
+tl.to("#c5", { opacity: 0, duration: 0.25 }, 52.600);
+tl.fromTo("#c6", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 53.250);
+tl.to("#c6", { opacity: 0, duration: 0.25 }, 61.300);
+tl.fromTo("#c7", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 61.950);
+tl.to("#c7", { opacity: 0, duration: 0.25 }, 68.800);
+tl.fromTo("#c8", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 69.450);
+tl.to("#c8", { opacity: 0, duration: 0.25 }, 78.800);
+tl.fromTo("#outro .brand", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 79.350);
+tl.fromTo("#outro .sub", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 79.700);
+tl.fromTo("#outro .kick", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 80.150);
+window.__timelines["main"] = tl;
+</script></body></html>

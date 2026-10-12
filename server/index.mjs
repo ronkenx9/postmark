@@ -7,6 +7,42 @@ const chain = process.env.POSTMARK_CHAIN === "devnet"
   ? new (await import("./chain.mjs")).Chain()
   : null;
 import { beginStorage, storageMode } from "./storage.mjs";
+const mirror = chain ? await import("./mirror.mjs") : null;
+const { waitUntil } = await import("@vercel/functions").catch(() => ({}));
+const background = (job) => {
+  const p = job().catch((e) => console.error("chain sync:", e.message));
+  if (process.env.VERCEL === "1" && waitUntil) waitUntil(p);
+};
+async function loadRoom(code) {
+  const t = await beginStorage(false);
+  try {
+    return structuredClone(t.db.rooms[code] || null);
+  } finally {
+    await t.close(true);
+  }
+}
+const EXPLORER = "https://explorer.solana.com";
+function chainView(m) {
+  const er = encodeURIComponent(
+    process.env.MAGICBLOCK_RPC || "https://devnet-as.magicblock.app",
+  );
+  return {
+    mode: "magicblock-devnet",
+    verified: !!m?.address,
+    address: m?.address || null,
+    finished: !!m?.finished,
+    accountUrl: m?.address
+      ? `${EXPLORER}/address/${m.address}?cluster=devnet`
+      : null,
+    txs: (m?.txs || []).map((t) => ({
+      ...t,
+      url:
+        t.layer === "solana"
+          ? `${EXPLORER}/tx/${t.signature}?cluster=devnet`
+          : `${EXPLORER}/tx/${t.signature}?cluster=custom&customUrl=${er}`,
+    })),
+  };
+}
 const dist = resolve(fileURLToPath(new URL("../dist/", import.meta.url)));
 const buckets = new Map();
 function staticFile(req, res) {
@@ -107,7 +143,7 @@ export async function handle(req, response) {
       output = body ?? "";
     },
   };
-  let db, save;
+  let db, save, syncCode;
 
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -170,10 +206,6 @@ export async function handle(req, response) {
     if (buckets.size > 1000)
       for (const [k, v] of buckets)
         if (now - v.start > 60000) buckets.delete(k);
-    if (chain && storageMode === "postgres")
-      throw new Error(
-        "Live chain hosting awaits durable transaction recovery verification.",
-      );
     transaction = await beginStorage(req.method !== "GET");
     ({ db, save } = transaction);
     const token = req.headers.authorization?.replace(/^Bearer /, "");
@@ -212,8 +244,6 @@ export async function handle(req, response) {
       const room = createRoom(id, body.practice === true);
       while (db.rooms[room.code])
         room.code = randomBytes(3).toString("hex").toUpperCase();
-      if (chain && !room.practice)
-        room.chain = await chain.initialize(room.code);
       db.rooms[room.code] = room;
       if (room.practice) {
         joinRoom(room, "guide");
@@ -253,37 +283,6 @@ export async function handle(req, response) {
         );
       const draft = structuredClone(room);
       guess(draft, id, body);
-      if (chain && room.chain.verified) {
-        const pendingKey = room.round + ":" + id;
-        room.pendingGuesses ??= {};
-        const old = room.pendingGuesses[pendingKey];
-        if (old && (old.lat !== body.lat || old.lng !== body.lng))
-          throw new Error(
-            "Your original guess is pending on-chain. Retry those coordinates.",
-          );
-        room.pendingGuesses[pendingKey] = { lat: body.lat, lng: body.lng };
-        draft.pendingGuesses = room.pendingGuesses;
-        await save();
-        const locked = await chain.lock(
-          room.code,
-          room.round,
-          room.players.indexOf(id),
-          body,
-        );
-        draft.chain.transactions.push(locked);
-        if (draft.results.length > room.results.length) {
-          const entries = draft.results.at(-1).entries;
-          draft.chain.transactions.push({
-            signature: await chain.settle(
-              room.code,
-              room.round,
-              entries.map((e) => e.score),
-            ),
-          });
-        }
-        if (draft.phase === "finished")
-          draft.chain.result = await chain.finish(room.code);
-      }
       Object.assign(room, draft);
       award(room, db);
     }
@@ -295,14 +294,17 @@ export async function handle(req, response) {
     if (req.method !== "GET" && req.method !== "POST")
       throw new Error("Method not supported.");
     if (req.method === "POST") await save();
-    res.end(
-      JSON.stringify(
-        publicRoom(room, id, {
-          ...db.profiles,
-          guide: { name: "Postmark guide" },
-        }),
-      ),
-    );
+    const view = publicRoom(room, id, {
+      ...db.profiles,
+      guide: { name: "Postmark guide" },
+    });
+    if (mirror && !room.practice) {
+      const m = await mirror.readMirror(room.code);
+      view.chain = chainView(m);
+      const changed = req.method === "POST" && room.players.length === 2;
+      if (changed || mirror.behind(room, m)) syncCode = room.code;
+    }
+    res.end(JSON.stringify(view));
   } catch (e) {
     res.writeHead(400);
     res.end(
@@ -326,6 +328,8 @@ export async function handle(req, response) {
     }
     response.writeHead(status);
     response.end(output);
+    if (syncCode && status < 400)
+      background(() => mirror.syncRoom(chain, loadRoom, syncCode));
   }
 }
 const server = http.createServer(handle);

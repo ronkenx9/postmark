@@ -5,7 +5,6 @@ import {
   Transaction,
   TransactionInstruction,
   SystemProgram,
-  sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import {
   DELEGATION_PROGRAM_ID,
@@ -66,11 +65,12 @@ export class Chain {
     this.payer = Keypair.fromSecretKey(
       Uint8Array.from(
         JSON.parse(
-          readFileSync(
-            process.env.POSTMARK_DEVNET_KEY ||
-              new URL("../keys/devnet.json", import.meta.url),
-            "utf8",
-          ),
+          process.env.POSTMARK_DEVNET_SECRET ||
+            readFileSync(
+              process.env.POSTMARK_DEVNET_KEY ||
+                new URL("../keys/devnet.json", import.meta.url),
+              "utf8",
+            ),
         ),
       ),
     );
@@ -108,14 +108,46 @@ export class Chain {
         data: Buffer.concat([discriminator(name), data]),
       }),
     );
-    return sendAndConfirmTransaction(connection, tx, [this.payer], {
-      commitment: "confirmed",
+    // HTTP polling instead of websocket confirmation (websockets stall on serverless).
+    const { blockhash, lastValidBlockHeight } =
+      await connection.getLatestBlockhash("confirmed");
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = this.payer.publicKey;
+    tx.sign(this.payer);
+    const raw = tx.serialize();
+    const signature = await connection.sendRawTransaction(raw, {
+      skipPreflight: false,
       maxRetries: 3,
     });
+    for (let i = 0; i < 60; i++) {
+      const { value } = await connection.getSignatureStatuses([signature]);
+      const st = value[0];
+      if (st?.err)
+        throw new Error("Transaction failed: " + JSON.stringify(st.err));
+      if (
+        st?.confirmationStatus === "confirmed" ||
+        st?.confirmationStatus === "finalized"
+      )
+        return signature;
+      if (i % 5 === 4) {
+        if ((await connection.getBlockHeight("confirmed")) > lastValidBlockHeight)
+          throw new Error("Transaction expired before confirmation.");
+        await connection.sendRawTransaction(raw, { skipPreflight: true }).catch(() => {});
+      }
+      await new Promise((r) => setTimeout(r, 500));
+    }
+    throw new Error("Timed out confirming transaction.");
+  }
+  async state(code) {
+    return decodeGame(await this.er.getAccountInfo(this.address(code)));
   }
   async initialize(code) {
     const pda = this.address(code);
-    const initialize = await this.send(
+    // Re-runnable: skip steps an interrupted earlier attempt already finished.
+    const existing = await this.base.getAccountInfo(pda);
+    const initialize = existing
+      ? null
+      : await this.send(
       this.base,
       "initialize",
       [
@@ -134,7 +166,10 @@ export class Chain {
     if (!identityResponse.ok || identity.error || !identity.result?.identity)
       throw new Error("Cannot resolve MagicBlock validator identity.");
     const validator = new PublicKey(identity.result.identity);
-    const delegate = await this.send(
+    const current = await this.base.getAccountInfo(pda);
+    const delegate = current?.owner.equals(DELEGATION_PROGRAM_ID)
+      ? null
+      : await this.send(
       this.base,
       "delegate",
       [
@@ -162,6 +197,7 @@ export class Chain {
       mode: "magicblock-devnet",
       verified: true,
       address: pda.toBase58(),
+      validator: validator.toBase58(),
       initialize,
       delegate,
       transactions: [],
@@ -237,5 +273,19 @@ export class Chain {
       (g, info) => g.finished && g.round === 3 && info.owner.equals(PROGRAM),
     );
     return { signature, state };
+  }
+  // The base-layer transaction in which MagicBlock wrote the final state back.
+  async settlement(code) {
+    const sigs = await this.base.getSignaturesForAddress(this.address(code), {
+      limit: 10,
+    });
+    for (const { signature } of sigs) {
+      const tx = await this.base.getTransaction(signature, {
+        maxSupportedTransactionVersion: 0,
+      });
+      if (tx?.meta?.logMessages?.some((l) => l.includes("ProcessUndelegation")))
+        return signature;
+    }
+    return null;
   }
 }

@@ -47,6 +47,68 @@ async function api(path, body) {
   if (!res.ok) throw new Error(data.error || "Could not connect. Try again.");
   return data;
 }
+
+const STEP_LABEL = {
+  create: () => "Match opened on Solana",
+  delegate: () => "Handed to a MagicBlock rollup",
+  lock: (t, names) =>
+    `${names[t.player] || "Traveller"} sealed a guess · round ${t.round + 1}`,
+  settle: (t) => `Round ${t.round + 1} scored on the rollup`,
+  commit: () => "Rollup commits the final score to Solana",
+  settled: () => "Final score settled on Solana",
+};
+function ChainChip({ room }) {
+  const c = room.chain;
+  if (room.practice) return <span className="mode">Practice · off-chain</span>;
+  if (!c?.verified)
+    return (
+      <span className="mode">
+        {room.players.length < 2
+          ? "Opens on MagicBlock when your friend joins"
+          : "Opening on MagicBlock…"}
+      </span>
+    );
+  return (
+    <a className="mode chain-chip" href={c.accountUrl} target="_blank" rel="noreferrer">
+      <span className="live-dot" /> Live on MagicBlock · {c.txs.length} tx ↗
+    </a>
+  );
+}
+function ChainLedger({ room }) {
+  const c = room.chain;
+  if (room.practice || !c?.verified) return null;
+  const names = room.players.map((p) => p.name);
+  return (
+    <section className="ledger" aria-label="On-chain match ledger">
+      <div className="ledger-head">
+        <span className="eyebrow">MATCH LEDGER · MAGICBLOCK EPHEMERAL ROLLUP</span>
+        <a href={c.accountUrl} target="_blank" rel="noreferrer">
+          Match account ↗
+        </a>
+      </div>
+      <ol>
+        {c.txs.map((t) => (
+          <li key={t.signature}>
+            <span className={"layer " + t.layer}>
+              {t.layer === "er" ? "ROLLUP" : "SOLANA"}
+            </span>
+            <span className="what">{STEP_LABEL[t.step]?.(t, names) || t.step}</span>
+            <a href={t.url} target="_blank" rel="noreferrer">
+              {t.signature.slice(0, 6)}…{t.signature.slice(-4)} ↗
+            </a>
+          </li>
+        ))}
+        {!c.finished && (
+          <li className="pending">
+            <span className="layer er">ROLLUP</span>
+            <span className="what">Catching up with your match…</span>
+          </li>
+        )}
+      </ol>
+    </section>
+  );
+}
+
 function Globe() {
   return <Globe3D decorative />;
 }
@@ -95,10 +157,17 @@ function App() {
     [room, setRoom] = useState(null),
     [code, setCode] = useState(invitedRoom),
     [pin, setPin] = useState(null),
+    [coordText, setCoordText] = useState({ lat: "", lng: "" }),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [copied, setCopied] = useState(false);
   const lastRound = useRef(-1);
+  useEffect(() => {
+    setCoordText((t) => ({
+      lat: pin && Number(t.lat) === pin.lat ? t.lat : pin ? String(pin.lat) : "",
+      lng: pin && Number(t.lng) === pin.lng ? t.lng : pin ? String(pin.lng) : "",
+    }));
+  }, [pin?.lat, pin?.lng]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [page, room?.phase]);
@@ -422,11 +491,7 @@ function App() {
                   : "FRIENDLY DUEL"}{" "}
                 &nbsp; / &nbsp; {room.code}
               </span>
-              <span className="mode">
-                {room.chain.verified
-                  ? "MagicBlock verified"
-                  : "Casual play · chain pending"}
-              </span>
+              <ChainChip room={room} />
             </div>
             {room.phase === "lobby" ? (
               <div className="lobby">
@@ -517,36 +582,44 @@ function App() {
                           LAT
                           <input
                             aria-label="Latitude"
-                            type="number"
+                            type="text"
                             min="-90"
                             max="90"
                             step="0.01"
                             disabled={self?.locked}
-                            value={pin?.lat ?? ""}
-                            onChange={(e) =>
-                              setPin({
-                                lat: Number(e.target.value),
-                                lng: pin?.lng ?? 0,
-                              })
-                            }
+                            value={coordText.lat}
+                            onChange={(e) => {
+                              const text = e.target.value;
+                              setCoordText((t) => ({ ...t, lat: text }));
+                              const v = Number(text);
+                              if (text.trim() !== "" && Number.isFinite(v))
+                                setPin({
+                                  lat: v,
+                                  lng: pin?.lng ?? 0,
+                                });
+                            }}
                           />
                         </label>
                         <label>
                           LNG
                           <input
                             aria-label="Longitude"
-                            type="number"
+                            type="text"
                             min="-180"
                             max="180"
                             step="0.01"
                             disabled={self?.locked}
-                            value={pin?.lng ?? ""}
-                            onChange={(e) =>
-                              setPin({
-                                lat: pin?.lat ?? 0,
-                                lng: Number(e.target.value),
-                              })
-                            }
+                            value={coordText.lng}
+                            onChange={(e) => {
+                              const text = e.target.value;
+                              setCoordText((t) => ({ ...t, lng: text }));
+                              const v = Number(text);
+                              if (text.trim() !== "" && Number.isFinite(v))
+                                setPin({
+                                  lng: v,
+                                  lat: pin?.lat ?? 0,
+                                });
+                            }}
                           />
                         </label>
                       </div>
@@ -638,6 +711,7 @@ function App() {
                         <ArrowRight size={18} />
                       </button>
                     </div>
+                    <ChainLedger room={room} />
                     {room.phase === "finished" && (
                       <p className="award-note">
                         Three destinations, three souvenirs.{" "}
@@ -715,7 +789,7 @@ function App() {
         <span>
           <Compass size={15} /> MADE FOR THE DETOUR.
         </span>
-        <span>POSTMARK · A MAGICBLOCK BUILD IN PROGRESS</span>
+        <span>POSTMARK · EVERY DUEL RUNS ON A MAGICBLOCK EPHEMERAL ROLLUP</span>
         <span>
           <Globe2 size={14} /> THE WORLD IS OPEN
         </span>

@@ -31,8 +31,9 @@ npm run test:api
 - Nine curated locations; distances use the Haversine formula and points use `round(5000 * exp(-distanceKm / 2000))`.
 - Guesses stay server-side until both players submit. The location list is public source: this is a casual clue game, not cheat-resistant competitive play.
 - With `DATABASE_URL`, the API stores profiles, rooms and passports in PostgreSQL. Write transactions lock the state row so concurrent guesses cannot overwrite each other. Without a database, local development uses atomic file replacement and requires a single server with a persistent volume.
-- Anchor program compiles and passed local-validator checks. It implements signer authorization, round sequencing, salted/HMAC guess commitments, bounded oracle scores, delegation, and final commit/undelegation.
-- The server contains a MagicBlock adapter. Live devnet deployment and ER-to-Solana proof are **not yet verified**. The hosted game labels its chain integration as pending.
+- Anchor program `F3zG6GJkibp3HB7tFrt32UGaiJaSEarAJ3QWnmgiRqs6` is **deployed on Solana devnet**. It implements signer authorization, round sequencing, salted/HMAC guess commitments, bounded oracle scores, delegation, and final commit/undelegation.
+- **Every real duel on the hosted site runs on a MagicBlock Ephemeral Rollup.** When the second player joins, the match account is created on Solana and delegated; each guess is locked on the rollup; each round is settled there once both guesses are locked; the final score is committed and undelegated back to Solana. The game screen shows a live match ledger with an explorer link for every step (13 entries per duel, ending with the base-layer settlement by MagicBlock).
+- Chain work runs in a background sync outside the game's database lock. It derives each step from the rollup's current state, so retries and overlapping syncs only send what is missing.
 
 ## MagicBlock flow
 
@@ -54,14 +55,18 @@ npm run test:program
 
 For devnet, fund only the dedicated test wallet with free test SOL, deploy `target/deploy/postmark_game.so` using `keys/program.json` as the program identity, then run `npm run verify:chain`. That check must produce `submission/chain-evidence.json` with a final base-layer state proof before enabling `POSTMARK_CHAIN=devnet`. No mainnet deployment is configured.
 
-## Limits and outstanding release work
+## Live proof (devnet)
 
-- Devnet faucet rejected two requests on October 10; no test funds or live program deployment confirmed.
-- MagicBlock's live portal said “No open events to submit to right now” on October 10. Saved registration notes say Blitz v9 closes October 12; organizer confirmation is required before claiming submission eligibility.
-- Public source is available at [ronkenx9/postmark](https://github.com/ronkenx9/postmark); GitHub's application build and gameplay checks passed. The public game is hosted at [postmark-teal.vercel.app](https://postmark-teal.vercel.app). Final video and submission remain outstanding.
+- Program: https://explorer.solana.com/address/F3zG6GJkibp3HB7tFrt32UGaiJaSEarAJ3QWnmgiRqs6?cluster=devnet
+- `npm run verify:chain` evidence: `submission/chain-evidence.json` (match 8A032E: initialize, delegate, six rollup guess locks, three rollup settlements, commit; final base-layer state `finished=true`, scores [12000, 9000]).
+- Delegation transaction: https://explorer.solana.com/tx/5NWMRc2vUfgdje78WNojFawwteLLmfsFeLrsgL93RS97tqSByXx5hn2iHsdSvk2CdViVtAhN8fErtzvcjdRZGjWo?cluster=devnet
+
+## Limits
+
 - No match expiry/forfeit yet. A disconnected friend can rejoin with their original browser session; losing that session abandons the match.
 - Session tokens are browser-local bearer credentials; protect the host with HTTPS. No cross-device account recovery is implemented.
-- Runtime dependency audit reports two low and five moderate findings through the official MagicBlock and Solana dependency trees. No high or critical findings. Do not perform a blind major-version upgrade; recheck compatibility and the relevant call paths before public release.
+- The server is the trusted scoring oracle and sponsors all transactions from a devnet-only wallet. Rollup state is public; commitments keep raw guesses off-chain during a round.
+- Runtime dependency audit reports low and moderate findings through the official MagicBlock and Solana dependency trees, no high or critical findings.
 
 ## Sources and credits
 
@@ -82,7 +87,7 @@ The landing and match screens now render a Three.js sphere with locally generate
 
 `vercel.json` deploys the Vite frontend and the API together. Connect a dedicated PostgreSQL database and set `DATABASE_URL` in Vercel production. No wallet secrets are needed for casual play. The API creates its own state table on first use; never expose the connection string through a Vite-prefixed variable.
 
-The database adapter keeps the demo state in one JSONB row, with transactional locking. This is appropriate for a small hackathon demo, not high-volume production: split profiles and matches into separate rows before scaling. Chain-enabled serverless hosting is deliberately blocked until durable transaction recovery is verified; the local chain adapter remains available for devnet qualification.
+The database adapter keeps the demo state in one JSONB row, with transactional locking. This is appropriate for a small hackathon demo, not high-volume production: split profiles and matches into separate rows before scaling. With `POSTMARK_CHAIN=devnet`, `MAGICBLOCK_RPC` and `POSTMARK_DEVNET_SECRET` set, each real duel is mirrored to MagicBlock by a background sync (Vercel `waitUntil`); its log lives in its own `postmark_chain` table with atomic appends and a per-room advisory lock on the unpooled connection.
 
 To verify a deployment:
 
